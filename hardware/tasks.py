@@ -8,7 +8,11 @@ scheduler = APScheduler()
 dht_device = adafruit_dht.DHT11(board.D4)
 
 fire_pin = 26
+solid_pin = 16
 GPIO.setup(fire_pin, GPIO.IN)
+GPIO.setup(solid_pin, GPIO.IN)
+
+data = {}
 
 
 # interval examples
@@ -43,3 +47,10 @@ def fire_task():
     logger.info('start fire check!')
     if GPIO.input(fire_pin) == 0:
         logger.info(f'fire!fire!fire!')
+
+
+@scheduler.task('interval', id='solid_task', minutes=10, misfire_grace_time=1)
+def solid_task():
+    logger.info('start solid check!')
+    if GPIO.input(solid_pin) == 1:
+        logger.info(f'需要进行灌溉！')
