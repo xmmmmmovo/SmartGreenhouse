@@ -4,6 +4,7 @@ from config import Config
 from tasks import scheduler
 from flask_loguru import Logger
 from flask_loguru import logger
+import time
 
 app = Flask(__name__)
 log = Logger()
@@ -11,7 +12,7 @@ log = Logger()
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return int(round(time.time() * 1000))
 
 
 if __name__ == '__main__':
