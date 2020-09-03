@@ -8,9 +8,11 @@ from flask_loguru import logger
 app = Flask(__name__)
 log = Logger()
 
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
+
 
 if __name__ == '__main__':
     log.init_app(app, {
@@ -26,4 +28,10 @@ GPIO VERSION: {GPIO.VERSION}
     app.config.from_object(Config())
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host='0.0.0.0', port=9000, debug=True)
+    logger.info(f'''
+------------------初始化完成！------------------
+tasks state:{scheduler.state}
+hostname: {scheduler.host_name}
+------------------启动服务器！------------------
+        ''')
+    app.run(host='0.0.0.0', port=9000, debug=False)

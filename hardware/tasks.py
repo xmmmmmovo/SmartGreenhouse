@@ -8,12 +8,12 @@ dht_device = adafruit_dht.DHT11(board.D4)
 
 
 # interval examples
-@scheduler.task('interval', id='alive_task', seconds=60, misfire_grace_time=25)
+@scheduler.task('interval', id='alive_task', seconds=20, misfire_grace_time=25)
 def alive_task():
     logger.info('still alive!')
 
 
-@scheduler.task('interval', id='temperature_task', seconds=60, misfire_grace_time=25)
+@scheduler.task('interval', id='temperature_task', seconds=30, misfire_grace_time=25)
 def temperature_task():
     logger.info('start temperature collect!')
     try:
@@ -26,7 +26,6 @@ def temperature_task():
                 temperature_f, temperature_c, humidity
             )
         )
-
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
         logger.error(error.args[0])
