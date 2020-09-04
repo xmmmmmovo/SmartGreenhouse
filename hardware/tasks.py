@@ -5,16 +5,15 @@ import adafruit_dht
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 
-reader = SimpleMFRC522()
 scheduler = APScheduler()
+
+reader = SimpleMFRC522()
 dht_device = adafruit_dht.DHT11(board.D4)
 
 fire_pin = 26
 solid_pin = 16
 GPIO.setup(fire_pin, GPIO.IN)
 GPIO.setup(solid_pin, GPIO.IN)
-
-data = {}
 
 
 # interval examples

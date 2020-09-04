@@ -1,0 +1,9 @@
+data
+.git
+*.egg-info
+*.pyc
+**/tests
+**/.tox
+**/__pycache__
+**/node_modules
+**/venv

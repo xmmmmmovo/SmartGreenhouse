@@ -5,7 +5,6 @@ from tasks import scheduler
 from flask_loguru import Logger
 from flask_loguru import logger
 import time
-import threading
 
 app = Flask(__name__)
 log = Logger()
