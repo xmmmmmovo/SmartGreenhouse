@@ -66,4 +66,16 @@ RFID-RC522
 
 ### 接口
 
-VCC->
+VCC->17
+
+RST->22
+
+GND->25
+
+MISO->21
+
+MOSI->19
+
+SCK->23
+
+SDA->24

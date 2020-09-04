@@ -9,13 +9,6 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="pi@192.168.0.104:22 password">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/tmp/pycharm_project_505" local="$PROJECT_DIR$" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="root@49.232.53.181:57122">
         <serverdata>
           <mappings>

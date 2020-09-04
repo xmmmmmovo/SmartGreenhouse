@@ -3,7 +3,9 @@ from flask_loguru import logger
 import board
 import adafruit_dht
 import RPi.GPIO as GPIO
+from mfrc522 import SimpleMFRC522
 
+reader = SimpleMFRC522()
 scheduler = APScheduler()
 dht_device = adafruit_dht.DHT11(board.D4)
 
