@@ -1,16 +1,14 @@
 import pymysql
 import os
-from logging import getLogger
-
-logger = getLogger(__name__)
+from flask_loguru import logger
 
 
 class MysqlOp:
     conn = None
     cur = None
 
-    def __init__(self, host='119.3.166.63', port=3306, user='root',
-                 password='123456', db='test', charset='utf8'):
+    def __init__(self, host='cdb-rshg0xgs.cd.tencentcdb.com', port=10092, user='root',
+                 password='Rn_ygD_tfTZHUN3', db='greenhouse', charset='utf8'):
         try:
             self.conn = pymysql.connect(
                 host=host, port=port, user=user,

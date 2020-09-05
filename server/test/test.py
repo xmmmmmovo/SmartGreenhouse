@@ -1,0 +1,1 @@
+print(len('3f7e8fc2-eebe-11ea-b9df-8878732c3ecb'))
