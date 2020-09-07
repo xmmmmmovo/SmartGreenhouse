@@ -28,9 +28,8 @@ def connect_mqtt():
         logger.info(f'topic: {message.topic}, message: {message.payload.decode()}')
         if message.topic == sensor_data_topic:
             data = json.loads(message.payload.decode())
-            
-            pass
 
+            pass
 
     mqtt_client = mqtt.Client(client_id, transport='websockets')
     mqtt_client.username_pw_set(user, pwd)

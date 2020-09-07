@@ -10,10 +10,12 @@ scheduler = APScheduler()
 reader = SimpleMFRC522()
 dht_device = adafruit_dht.DHT11(board.D4)
 
-fire_pin = 26
+fire_pin = 19
 solid_pin = 16
+illumination_pin = 17
 GPIO.setup(fire_pin, GPIO.IN)
 GPIO.setup(solid_pin, GPIO.IN)
+GPIO.setup(illumination_pin, GPIO.IN)
 
 
 # interval examples
@@ -55,3 +57,10 @@ def solid_task():
     logger.info('start solid check!')
     if GPIO.input(solid_pin) == 1:
         logger.info(f'需要进行灌溉！')
+
+
+@scheduler.task('interval', id='illumination_task', seconds=10, misfire_grace_time=5)
+def illumination_task():
+    logger.info('start illumination check')
+    if GPIO.input(illumination_pin) == 1:
+        logger.info('需要光照！')
