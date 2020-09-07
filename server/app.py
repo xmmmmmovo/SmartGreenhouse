@@ -1,12 +1,14 @@
 from flask import Flask
+from mqtt import mqtt
 from response import response_success
 from time import time
 from flask_loguru import Logger
-from mqtt import mqtt
+from flask_loguru import logger
 from exception import exception
 from bp.user_app import user_bp
 from bp.hardware_app import hardware_bp
 from cache import redis
+
 
 app = Flask(__name__)
 app.config['REDIS_URL'] = 'redis://redis:6379/0'
@@ -14,7 +16,7 @@ app.register_blueprint(exception)
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(hardware_bp, url_prefix='/hardware')
 
-app.config['MQTT_BROKER_URL'] = 'www.fivezha.cn'
+app.config['MQTT_BROKER_URL'] = '39.105.110.28'
 app.config['MQTT_BROKER_PORT'] = 8083
 app.config['MQTT_USERNAME'] = 'emqx'
 app.config['MQTT_PASSWORD'] = 'public'
@@ -31,9 +33,10 @@ def hello_world():
 
 if __name__ == '__main__':
     log.init_app(app, {
-        'LOG_PATH': './log',
+        'LOG_PATH': '../log',
         'LOG_NAME': 'run.log'
     })
     mqtt.init_app(app)
+    logger.info(mqtt.connected)
     redis.init_app(app)
-    app.run(host='0.0.0.0', port=9000, debug=True)
+    app.run(host='0.0.0.0', port=8888, debug=False)
