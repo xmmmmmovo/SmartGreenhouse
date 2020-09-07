@@ -6,7 +6,7 @@ from paho.mqtt import client as mqtt_client
 
 broker = '39.105.110.28'
 port = 8083
-topic = "/su"
+topic = 'sensor_data'
 # generate client ID with pub prefix randomly
 client_id = f'python-mqtt-{random.randint(0, 100)}'
 
@@ -30,6 +30,7 @@ def subscribe(client: mqtt_client):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
 
     client.subscribe(topic)
+    client.publish('sensor_data', '114514')
     client.on_message = on_message
 
 

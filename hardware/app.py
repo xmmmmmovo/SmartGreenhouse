@@ -27,7 +27,7 @@ def load_config():
         logger.info('读取成功')
     else:
         logger.info('未找到，正在从云端获取')
-        uuid = requests.post('http://192.168.0.100:9000/hardware/code').json()['data']
+        uuid = requests.post('http://192.168.137.1:9000/hardware/code').json()['data']
         f = open('./uuid', 'w', encoding='utf-8')
         f.write(uuid)
     f.close()
