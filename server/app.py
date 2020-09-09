@@ -30,7 +30,7 @@ if __name__ == '__main__':
         'LOG_PATH': '../log',
         'LOG_NAME': 'run.log'
     })
-    app.config['REDIS_URL'] = config['REDIS_URL']
+    app.config['REDIS_URL'] = config['redis']['url']
     connect_mqtt()
     redis.init_app(app)
     app.run(host=config['app']['host'], port=config['app']['port'], debug=False)
