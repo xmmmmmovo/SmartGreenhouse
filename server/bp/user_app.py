@@ -5,7 +5,7 @@ from exception.judge_utils import request_judge
 
 from response import response_success
 
-user_bp = Blueprint('user_app', __name__)
+user_bp = Blueprint('user_app', __name__, url_prefix='/user')
 
 
 @user_bp.route("/<int:id>", methods=["GET"])

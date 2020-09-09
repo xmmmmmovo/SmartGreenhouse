@@ -1,4 +1,4 @@
-from db.mysql_operator import MysqlOp
+from db import MysqlOp
 from flask_loguru import logger
 
 

@@ -65,7 +65,7 @@ def connect_mqtt():
         else:
             logger.info('Failed to connect to mqtt broker!')
 
-    mqtt_client = mqtt.Client(data['uuid'], transport='websockets')
+    mqtt_client = mqtt.Client(data['uuid'] + '_sensor_client', transport='websockets')
     mqtt_client.username_pw_set(user, pwd)
     mqtt_client.on_connect = handle_mqtt_connect
     mqtt_client.connect(broker_url, port)

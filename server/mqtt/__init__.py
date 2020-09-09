@@ -1,16 +1,11 @@
 from flask_loguru import logger
 import paho.mqtt.client as mqtt
 import json
-from db.hardware_dao import insert_sensor_data, get_id_by_uuid, insert_hardware
-
-broker_url = '39.105.110.28'
-port = 8083
-user = 'emqx'
-pwd = 'public'
-transport = 'websockets'
-client_id = 'server-mqtt'
+from db.hardware_dao import insert_sensor_data
+from config import config
 
 sensor_data_topic = 'sensor_data'
+mqtt_config = config['mqtt']
 
 mqtt_client: mqtt.Client = None
 
@@ -37,8 +32,8 @@ def handle_mqtt_message(client, userdata, message):
 
 def connect_mqtt():
     global mqtt_client
-    mqtt_client = mqtt.Client(client_id, transport='websockets')
-    mqtt_client.username_pw_set(user, pwd)
+    mqtt_client = mqtt.Client(mqtt_config['client_id'], transport=mqtt_config['transport'])
+    mqtt_client.username_pw_set(mqtt_config['user'], mqtt_config['pwd'])
     mqtt_client.on_connect = handle_mqtt_connect
-    mqtt_client.connect(broker_url, port)
+    mqtt_client.connect(mqtt_config['broker_url'], mqtt_config['port'])
     mqtt_client.loop_start()

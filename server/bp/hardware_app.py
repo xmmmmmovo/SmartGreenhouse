@@ -4,7 +4,7 @@ import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException
 
-hardware_bp = Blueprint('hardware_app', __name__)
+hardware_bp = Blueprint('hardware_app', __name__, url_prefix='/hardware')
 
 
 @hardware_bp.route('/code', methods=['POST'])
