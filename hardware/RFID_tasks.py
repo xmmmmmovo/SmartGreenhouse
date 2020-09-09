@@ -19,9 +19,9 @@ pwd = 'public'
 transport = 'websockets'
 
 data = {
-    'uuid': None,
-    'id': None,
-    'text': None
+    'uuid': '',
+    'id': '',
+    'text': ''
 }
 
 
@@ -71,10 +71,13 @@ def RFID_tasks():
             data['id'] = id
             data['text'] = text
             mqtt_client.publish(rfid_topic, data)
+            logger.info(f'push data {data}')
         finally:
             GPIO.cleanup()
         time.sleep(5)
 
 
 if __name__ == '__main__':
+    load_config()
+    connect_mqtt()
     RFID_tasks()

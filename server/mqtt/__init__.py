@@ -1,10 +1,11 @@
 from flask_loguru import logger
 import paho.mqtt.client as mqtt
 import json
-from db.hardware_dao import insert_sensor_data
+from db.hardware_dao import insert_sensor_data, insert_rfid_log
 from config import config
 
 sensor_data_topic = 'sensor_data'
+rfid_topic = 'rfid_log'
 mqtt_config = config['mqtt']
 
 mqtt_client: mqtt.Client = None
@@ -24,10 +25,12 @@ def handle_mqtt_message(client, userdata, message):
     logger.info(f'topic: {message.topic}, message: {message.payload.decode()}')
     if message.topic == sensor_data_topic:
         data = json.loads(message.payload)
-        eff_row = insert_sensor_data(data['humidity'], data['temperature'], data['uuid'], data['fire'],
-                                     data['illumination'],
-                                     data['solid'])
-        logger.info(f'eff_row: {eff_row}')
+        insert_sensor_data(data['humidity'], data['temperature'], data['uuid'], data['fire'],
+                           data['illumination'],
+                           data['solid'])
+    elif message.topic == rfid_topic:
+        data = json.loads(message.payload)
+        insert_rfid_log(data['text'], data['uuid'])
 
 
 def connect_mqtt():

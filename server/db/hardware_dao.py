@@ -17,3 +17,8 @@ def insert_sensor_data(temperature: str, humidity: str, uuid: str, fire: bool, i
     return MysqlOp().op_sql(
         'INSERT INTO sensor_data (hardware_uuid, temperature, humidity, is_fire, is_dry, is_illum) VALUES (%s, %s, %s, %s, %s, %s)',
         (uuid, temperature, humidity, int(fire), int(solid), int(illumination)))
+
+
+def insert_rfid_log(user_id, hardware_uuid):
+    logger.info('insert_rfid_log')
+    return MysqlOp().op_sql('INSERT INTO RFID_log (hardware_uuid,, user_id) VALUES (%s, %s)', (hardware_uuid, user_id))
