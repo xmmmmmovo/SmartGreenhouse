@@ -26,3 +26,11 @@ def response_fail(code: int, msg: str, data: Any) -> str:
         msg=str(msg),
         data=data
     ))
+
+
+def response_fail_exception(exception):
+    return jsonify(Response(
+        code=exception.code,
+        msg=exception.description,
+        data=None
+    ))

@@ -15,3 +15,18 @@ class DataNotFoundException(HTTPException):
 class DBException(HTTPException):
     code = ResponseCode.db_error
     description = "数据库操作失败!"
+
+
+class UnAuthorizedException(HTTPException):
+    code = ResponseCode.unauthorized
+    description = "身份验证失败！"
+
+
+class UserNotFoundException(HTTPException):
+    code = ResponseCode.unauthorized
+    description = "用户未找到 身份验证失败！"
+
+
+class InsufficientPermissions(HTTPException):
+    code = ResponseCode.unauthorized
+    description = "权限不足 无法查看！"

@@ -10,11 +10,19 @@ from bp.hardware_app import hardware_bp
 from cache import redis
 from mqtt import connect_mqtt
 from config import config
+from utils.pwd_utils import bcrypt
+from flask_jwt_extended import JWTManager
+from utils.jwt_utils import jwt_manager
+from datetime import timedelta
 
 app = Flask(__name__)
 app.register_blueprint(exception)
 app.register_blueprint(user_bp)
 app.register_blueprint(hardware_bp)
+
+app.config['REDIS_URL'] = config['redis']['url']
+app.config['JWT_SECRET_KEY'] = config['app']['jwt_secret_key']
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
 log = Logger()
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -30,7 +38,8 @@ if __name__ == '__main__':
         'LOG_PATH': '../log',
         'LOG_NAME': 'run.log'
     })
-    app.config['REDIS_URL'] = config['redis']['url']
     connect_mqtt()
     redis.init_app(app)
+    jwt_manager.init_app(app)
+    bcrypt.init_app(app)
     app.run(host=config['app']['host'], port=config['app']['port'], debug=False)

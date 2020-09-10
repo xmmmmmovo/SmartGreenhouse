@@ -9,4 +9,4 @@ class ResponseCode(IntEnum):
     params_error = 10005
     data_not_found = 10006
     db_error = 10007
-    unauthorized = 401
+    unauthorized = 403
