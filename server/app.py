@@ -2,7 +2,6 @@ from flask import Flask
 from response import response_success
 from time import time
 from flask_loguru import Logger
-from flask_loguru import logger
 from flask_cors import CORS
 from exception import exception
 from bp.user_app import user_bp
@@ -11,7 +10,6 @@ from cache import redis
 from mqtt import connect_mqtt
 from config import config
 from utils.pwd_utils import bcrypt
-from flask_jwt_extended import JWTManager
 from utils.jwt_utils import jwt_manager
 from datetime import timedelta
 
