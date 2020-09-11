@@ -1,4 +1,7 @@
 /lambda/
-/scripts
-/config
+/scripts/*
 .history
+serviceWorker.ts
+/config/*
+/public/*
+*.js

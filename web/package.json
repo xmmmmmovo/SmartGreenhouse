@@ -1,94 +1,198 @@
 {
-  "name": "ant-design-pro",
-  "version": "5.0.0-alpha.0",
+  "name": "react-ant-admin",
+  "version": "0.1.0",
   "private": true,
-  "description": "An out-of-box UI solution for enterprise applications",
+  "dependencies": {
+    "@ant-design/icons": "^4.2.2",
+    "antd": "^4.6.3",
+    "axios": "^0.19.0",
+    "classnames": "^2.2.6",
+    "github-markdown-css": "^3.0.1",
+    "js-cookie": "^2.2.1",
+    "react": "^16.11.0",
+    "react-app-polyfill": "^1.0.4",
+    "react-dev-utils": "^9.1.0",
+    "react-dom": "^16.11.0",
+    "react-helmet": "^5.2.1",
+    "react-markdown": "^4.2.2",
+    "react-redux": "^7.1.3",
+    "react-router-dom": "^5.1.2",
+    "react-transition-group": "^4.3.0",
+    "redux": "^4.0.4",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
+  },
+  "proxy": "https://www.landluck.com.cn/react-ant-admin-api",
+  "homepage": "https://www.landluck.com.cn/react-ant-admin",
   "scripts": {
-    "analyze": "cross-env ANALYZE=1 umi build",
-    "build": "umi build",
-    "deploy": "npm run site && npm run gh-pages",
-    "dev": "npm run start:dev",
-    "gh-pages": "gh-pages -d dist",
-    "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
-    "postinstall": "umi g tmp",
-    "lint": "umi g tmp && npm run lint:js && npm run lint:style && npm run lint:prettier",
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
+    "lint": "npm run lint:js && npm run lint:style && npm run lint:prettier",
     "lint-staged": "lint-staged",
-    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
-    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
-    "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
-    "lint:prettier": "prettier --check \"**/*\" --end-of-line auto",
+    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx --ignore-path .eslintignore .",
+    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style --ignore-path .eslintignore .",
+    "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src --ignore-path .eslintignore .",
+    "lint:prettier": "check-prettier lint --ignore-path .eslintignore .",
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
-    "prettier": "prettier -c --write \"**/*\"",
-    "start": "umi dev",
-    "start:dev": "cross-env REACT_APP_ENV=dev MOCK=none umi dev",
-    "start:no-mock": "cross-env MOCK=none umi dev",
-    "start:no-ui": "cross-env UMI_UI=none umi dev",
-    "start:pre": "cross-env REACT_APP_ENV=pre umi dev",
-    "start:test": "cross-env REACT_APP_ENV=test MOCK=none umi dev",
-    "pretest": "node ./tests/beforeTest",
-    "test": "umi test",
-    "test:all": "node ./tests/run-tests.js",
-    "test:component": "umi test ./src/components",
-    "tsc": "tsc"
+    "prettier": "prettier -c --write \"**/*\""
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
-    "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": ["prettier --write"]
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{jsx}": "npm run lint-staged:js",
+    "**/*.{ts,tsx}": "npm run lint-staged:js"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 10"],
-  "dependencies": {
-    "@ant-design/icons": "^4.0.0",
-    "@ant-design/pro-layout": "^6.2.5",
-    "@ant-design/pro-table": "^2.4.0",
-    "antd": "^4.4.0",
-    "classnames": "^2.2.6",
-    "lodash": "^4.17.11",
-    "moment": "^2.25.3",
-    "omit.js": "^2.0.2",
-    "path-to-regexp": "2.4.0",
-    "qs": "^6.9.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-helmet-async": "^1.0.4",
-    "umi": "^3.2.0",
-    "umi-request": "^1.0.8",
-    "use-merge-value": "^1.0.1"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "setupFilesAfterEnv": [],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jest-environment-jsdom-fourteen",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|less|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|less|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   },
   "devDependencies": {
-    "@ant-design/pro-cli": "^2.0.2",
-    "@types/classnames": "^2.2.7",
-    "@types/express": "^4.17.0",
-    "@types/history": "^4.7.2",
-    "@types/jest": "^26.0.0",
-    "@types/lodash": "^4.14.144",
-    "@types/qs": "^6.5.3",
-    "@types/react": "^16.9.17",
-    "@types/react-dom": "^16.8.4",
-    "@types/react-helmet": "^5.0.13",
-    "@umijs/fabric": "^2.2.0",
-    "@umijs/plugin-blocks": "^2.0.5",
-    "@umijs/plugin-esbuild": "^1.0.0-beta.2",
-    "@umijs/preset-ant-design-pro": "^1.2.0",
-    "@umijs/preset-react": "^1.4.8",
-    "@umijs/preset-ui": "^2.0.9",
-    "@umijs/yorkie": "^2.0.3",
-    "carlo": "^0.9.46",
-    "cross-env": "^7.0.0",
-    "cross-port-killer": "^1.1.1",
-    "detect-installer": "^1.0.1",
-    "enzyme": "^3.11.0",
-    "eslint": "^7.1.0",
-    "express": "^4.17.1",
-    "gh-pages": "^3.0.0",
-    "husky": "^4.0.7",
-    "jsdom-global": "^3.0.2",
-    "lint-staged": "^10.0.0",
-    "mockjs": "^1.0.1-beta3",
-    "prettier": "^2.0.1",
-    "pro-download": "1.0.1",
-    "puppeteer-core": "^5.0.0",
-    "stylelint": "^13.0.0"
-  },
-  "engines": { "node": ">=10.0.0" }
+    "@babel/core": "7.6.0",
+    "@svgr/webpack": "4.3.2",
+    "@types/classnames": "^2.2.9",
+    "@types/jest": "24.0.23",
+    "@types/js-cookie": "^2.2.4",
+    "@types/node": "12.12.7",
+    "@types/react": "16.9.12",
+    "@types/react-dom": "16.9.4",
+    "@types/react-helmet": "^5.0.14",
+    "@types/react-redux": "^7.1.5",
+    "@types/react-router-dom": "^5.1.2",
+    "@types/react-transition-group": "^4.2.3",
+    "@types/redux-logger": "^3.0.7",
+    "@typescript-eslint/eslint-plugin": "^2.2.0",
+    "@typescript-eslint/parser": "^2.2.0",
+    "@umijs/fabric": "^1.2.1",
+    "babel-eslint": "10.0.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "8.0.6",
+    "babel-plugin-import": "^1.12.2",
+    "babel-plugin-named-asset-import": "^0.3.4",
+    "babel-preset-react-app": "^9.0.2",
+    "camelcase": "^5.2.0",
+    "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "check-prettier": "^1.0.3",
+    "css-loader": "2.1.1",
+    "dotenv": "6.2.0",
+    "dotenv-expand": "5.1.0",
+    "eslint": "^6.6.0",
+    "eslint-config-react-app": "^5.0.2",
+    "eslint-loader": "3.0.2",
+    "eslint-plugin-flowtype": "3.13.0",
+    "eslint-plugin-import": "2.18.2",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-react": "7.14.3",
+    "eslint-plugin-react-hooks": "^1.6.1",
+    "file-loader": "3.0.1",
+    "fs-extra": "7.0.1",
+    "html-webpack-plugin": "4.0.0-beta.5",
+    "husky": "^3.1.0",
+    "identity-obj-proxy": "3.0.0",
+    "install": "^0.13.0",
+    "is-wsl": "^1.1.0",
+    "jest": "24.9.0",
+    "jest-environment-jsdom-fourteen": "0.1.0",
+    "jest-resolve": "24.9.0",
+    "jest-watch-typeahead": "0.4.0",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^9.4.3",
+    "mini-css-extract-plugin": "0.8.0",
+    "npm": "^6.13.1",
+    "optimize-css-assets-webpack-plugin": "5.0.3",
+    "pnp-webpack-plugin": "1.5.0",
+    "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-loader": "3.0.0",
+    "postcss-normalize": "7.0.1",
+    "postcss-preset-env": "6.7.0",
+    "postcss-safe-parser": "4.0.1",
+    "prettier": "^1.19.1",
+    "resolve": "1.12.0",
+    "resolve-url-loader": "3.1.0",
+    "sass-loader": "^8.0.0",
+    "semver": "6.3.0",
+    "style-loader": "1.0.0",
+    "stylelint": "^12.0.0",
+    "terser-webpack-plugin": "1.4.1",
+    "ts-pnp": "1.1.4",
+    "typescript": "3.7.2",
+    "url-loader": "2.1.0",
+    "webpack": "4.41.0",
+    "webpack-dev-server": "3.2.1",
+    "webpack-manifest-plugin": "2.1.1",
+    "workbox-webpack-plugin": "4.3.1"
+  }
 }
