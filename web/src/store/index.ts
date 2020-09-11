@@ -1,37 +1,14 @@
-import { createStore, combineReducers, applyMiddleware, compose, Middleware, Reducer } from 'redux';
-import reduxThunk from 'redux-thunk';
-import reduxLogger from 'redux-logger';
-import { IStoreState, IAction } from './types';
-import userReducer from './module/user';
-import appReducer from './module/app';
-import settingsReducer from './module/settings';
-import noticeReducer from './module/notice';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import { IAppState } from './modules/app'
+import { IUserState } from './modules/user'
 
-const reducers: Reducer<IStoreState, IAction<any>> = combineReducers<IStoreState>({
-  user: userReducer,
-  app: appReducer,
-  settings: settingsReducer,
-  notices: noticeReducer,
-});
+Vue.use(Vuex)
 
-const middleware: Middleware[] = [reduxThunk];
-
-if (process.env.NODE_ENV === 'development') {
-  middleware.push(reduxLogger);
+export interface IRootState {
+  app: IAppState
+  user: IUserState
 }
 
-function createMyStore() {
-  /* eslint-disable no-underscore-dangle */
-  const store = window.__REDUX_DEVTOOLS_EXTENSION__
-    ? createStore(
-        reducers,
-        compose(applyMiddleware(...middleware), window.__REDUX_DEVTOOLS_EXTENSION__({})),
-      )
-    : createStore(reducers, applyMiddleware(...middleware));
-
-  return store;
-}
-
-const store = createMyStore();
-
-export default store;
+// Declare empty store first, dynamically register all modules later.
+export default new Vuex.Store<IRootState>({})

@@ -1,198 +1,65 @@
 {
-  "name": "react-ant-admin",
+  "name": "智能大棚管理系统",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@ant-design/icons": "^4.2.2",
-    "antd": "^4.6.3",
-    "axios": "^0.19.0",
-    "classnames": "^2.2.6",
-    "github-markdown-css": "^3.0.1",
-    "js-cookie": "^2.2.1",
-    "react": "^16.11.0",
-    "react-app-polyfill": "^1.0.4",
-    "react-dev-utils": "^9.1.0",
-    "react-dom": "^16.11.0",
-    "react-helmet": "^5.2.1",
-    "react-markdown": "^4.2.2",
-    "react-redux": "^7.1.3",
-    "react-router-dom": "^5.1.2",
-    "react-transition-group": "^4.3.0",
-    "redux": "^4.0.4",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
-  },
-  "proxy": "https://www.landluck.com.cn/react-ant-admin-api",
-  "homepage": "https://www.landluck.com.cn/react-ant-admin",
+  "author": "",
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "lint": "npm run lint:js && npm run lint:style && npm run lint:prettier",
-    "lint-staged": "lint-staged",
-    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx --ignore-path .eslintignore .",
-    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style --ignore-path .eslintignore .",
-    "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src --ignore-path .eslintignore .",
-    "lint:prettier": "check-prettier lint --ignore-path .eslintignore .",
-    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
-    "prettier": "prettier -c --write \"**/*\""
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "svg": "vsvg -s ./src/icons/svg -t ./src/icons/components --ext ts --es6",
+    "test:e2e": "vue-cli-service test:e2e",
+    "test:unit": "vue-cli-service test:unit"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint-staged"
-    }
-  },
-  "lint-staged": {
-    "**/*.less": "stylelint --syntax less",
-    "**/*.{js,jsx,tsx,ts,less,md,json}": [
-      "prettier --write",
-      "git add"
-    ],
-    "**/*.{jsx}": "npm run lint-staged:js",
-    "**/*.{ts,tsx}": "npm run lint-staged:js"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|less|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|less|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
+  "dependencies": {
+    "axios": "^0.19.0",
+    "element-ui": "^2.12.0",
+    "js-cookie": "^2.2.1",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "path-to-regexp": "^3.0.0",
+    "register-service-worker": "^1.6.2",
+    "vue": "^2.6.10",
+    "vue-canvas-nest": "^2.0.0",
+    "vue-class-component": "^7.1.0",
+    "vue-property-decorator": "^8.2.2",
+    "vue-router": "^3.1.2",
+    "vue-svgicon": "^3.2.6",
+    "vuex": "^3.1.1",
+    "vuex-class": "^0.3.2",
+    "vuex-module-decorators": "^0.10.1"
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@svgr/webpack": "4.3.2",
-    "@types/classnames": "^2.2.9",
-    "@types/jest": "24.0.23",
-    "@types/js-cookie": "^2.2.4",
-    "@types/node": "12.12.7",
-    "@types/react": "16.9.12",
-    "@types/react-dom": "16.9.4",
-    "@types/react-helmet": "^5.0.14",
-    "@types/react-redux": "^7.1.5",
-    "@types/react-router-dom": "^5.1.2",
-    "@types/react-transition-group": "^4.2.3",
-    "@types/redux-logger": "^3.0.7",
-    "@typescript-eslint/eslint-plugin": "^2.2.0",
-    "@typescript-eslint/parser": "^2.2.0",
-    "@umijs/fabric": "^1.2.1",
-    "babel-eslint": "10.0.3",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "8.0.6",
-    "babel-plugin-import": "^1.12.2",
-    "babel-plugin-named-asset-import": "^0.3.4",
-    "babel-preset-react-app": "^9.0.2",
-    "camelcase": "^5.2.0",
-    "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "check-prettier": "^1.0.3",
-    "css-loader": "2.1.1",
-    "dotenv": "6.2.0",
-    "dotenv-expand": "5.1.0",
-    "eslint": "^6.6.0",
-    "eslint-config-react-app": "^5.0.2",
-    "eslint-loader": "3.0.2",
-    "eslint-plugin-flowtype": "3.13.0",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-react": "7.14.3",
-    "eslint-plugin-react-hooks": "^1.6.1",
-    "file-loader": "3.0.1",
-    "fs-extra": "7.0.1",
-    "html-webpack-plugin": "4.0.0-beta.5",
-    "husky": "^3.1.0",
-    "identity-obj-proxy": "3.0.0",
-    "install": "^0.13.0",
-    "is-wsl": "^1.1.0",
-    "jest": "24.9.0",
-    "jest-environment-jsdom-fourteen": "0.1.0",
-    "jest-resolve": "24.9.0",
-    "jest-watch-typeahead": "0.4.0",
-    "less": "^3.10.3",
-    "less-loader": "^5.0.0",
-    "lint-staged": "^9.4.3",
-    "mini-css-extract-plugin": "0.8.0",
-    "npm": "^6.13.1",
-    "optimize-css-assets-webpack-plugin": "5.0.3",
-    "pnp-webpack-plugin": "1.5.0",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-normalize": "7.0.1",
-    "postcss-preset-env": "6.7.0",
-    "postcss-safe-parser": "4.0.1",
-    "prettier": "^1.19.1",
-    "resolve": "1.12.0",
-    "resolve-url-loader": "3.1.0",
-    "sass-loader": "^8.0.0",
-    "semver": "6.3.0",
-    "style-loader": "1.0.0",
-    "stylelint": "^12.0.0",
-    "terser-webpack-plugin": "1.4.1",
-    "ts-pnp": "1.1.4",
-    "typescript": "3.7.2",
-    "url-loader": "2.1.0",
-    "webpack": "4.41.0",
-    "webpack-dev-server": "3.2.1",
-    "webpack-manifest-plugin": "2.1.1",
-    "workbox-webpack-plugin": "4.3.1"
+    "@types/jest": "^24.0.18",
+    "@types/js-cookie": "^2.2.2",
+    "@types/node": "~12.12.23",
+    "@types/nprogress": "^0.2.0",
+    "@types/webpack-env": "^1.14.0",
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-plugin-e2e-cypress": "^3.11.0",
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-plugin-pwa": "^3.11.0",
+    "@vue/cli-plugin-typescript": "^3.11.0",
+    "@vue/cli-plugin-unit-jest": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "@vue/eslint-config-typescript": "^4.0.0",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.2.2",
+    "eslint-plugin-vue": "^5.2.3",
+    "fibers": "^4.0.1",
+    "jest": "^24.9.0",
+    "sass": "^1.22.10",
+    "sass-loader": "^7.3.1",
+    "screenfull": "^5.0.2",
+    "style-resources-loader": "^1.2.1",
+    "ts-jest": "^24.0.2",
+    "typescript": "3.6.2",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-cli-plugin-style-resources-loader": "^0.1.3",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.3"
   }
 }
