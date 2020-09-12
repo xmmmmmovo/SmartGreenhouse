@@ -2,20 +2,20 @@ import request from '@/utils/request'
 
 export const getUserInfo = (data: any) =>
   request({
-    url: '/users/info',
+    url: '/user/info',
     method: 'post',
     data
   })
 
 export const login = (data: any) =>
   request({
-    url: '/users/login',
+    url: '/user/login',
     method: 'post',
     data
   })
 
 export const logout = () =>
   request({
-    url: '/users/logout',
+    url: '/user/logout',
     method: 'post'
   })

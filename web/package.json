@@ -1,5 +1,5 @@
 {
-  "name": "智能大棚管理系统",
+  "name": "greenhouse",
   "version": "0.1.0",
   "private": true,
   "author": "",
@@ -27,9 +27,11 @@
     "vue-svgicon": "^3.2.6",
     "vuex": "^3.1.1",
     "vuex-class": "^0.3.2",
-    "vuex-module-decorators": "^0.10.1"
+    "vuex-module-decorators": "^0.10.1",
+    "mqtt": "^4.2.1"
   },
   "devDependencies": {
+    "@types/mqtt": "^2.5.0",
     "@types/jest": "^24.0.18",
     "@types/js-cookie": "^2.2.2",
     "@types/node": "~12.12.23",

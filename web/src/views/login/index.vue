@@ -94,7 +94,7 @@ export default class extends Vue {
   }
   private loginForm = {
     username: 'admin',
-    password: '111111'
+    password: 'adminadmin'
   }
   private loginRules = {
     username: [{ validator: this.validateUsername, trigger: 'blur' }],
@@ -115,6 +115,10 @@ export default class extends Vue {
       this.redirect = query.redirect
       this.otherQuery = this.getOtherQuery(query)
     }
+  }
+
+  created() {
+    document.title = '登录'
   }
 
   mounted() {
@@ -140,15 +144,15 @@ export default class extends Vue {
     (this.$refs.loginForm as ElForm).validate(async(valid: boolean) => {
       if (valid) {
         this.loading = true
-        await UserModule.Login(this.loginForm)
+        console.log('login')
+        // eslint-disable-next-line handle-callback-err
+        await UserModule.Login(this.loginForm).catch((err) => {
+          this.loading = false
+        })
         this.$router.push({
           path: this.redirect || '/',
           query: this.otherQuery
         })
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.loading = false
-        }, 0.5 * 1000)
       } else {
         return false
       }

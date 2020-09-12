@@ -4,6 +4,7 @@ import 'nprogress/nprogress.css'
 import { Message } from 'element-ui'
 import { Route } from 'vue-router'
 import { UserModule } from '@/store/modules/user'
+import { MqttModule } from '@/store/modules/mqtt'
 
 NProgress.configure({ showSpinner: false })
 
@@ -27,6 +28,8 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
           await UserModule.GetUserInfo()
           // Set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
+          await MqttModule.Connect(UserModule.name)
+
         } catch (err) {
           // Remove token and redirect to login page
           UserModule.ResetToken()
@@ -56,5 +59,5 @@ router.afterEach((to: Route) => {
   NProgress.done()
 
   // set page title
-  document.title = to.meta.title
+  document.title = process.env.VUE_APP_NAME + ' - ' + to.meta.title
 })

@@ -5,6 +5,14 @@ from json import loads, dumps
 redis = FlaskRedis()
 
 
+def get_value(key):
+    return redis.get(key)
+
+
+def set_value(key, value):
+    return redis.set(key, value)
+
+
 def redis_cache(key, timeout):
     def __redis_cache(func):
         def warpper(*args, **kw):

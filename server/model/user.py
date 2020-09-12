@@ -6,7 +6,6 @@ from utils.pwd_utils import bcrypt
 @dataclass
 class User:
     username: str
-    password: str
     roles: List[str]
 
 

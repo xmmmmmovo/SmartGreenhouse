@@ -43,7 +43,7 @@ export const constantRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
         name: 'Dashboard',
         meta: {
-          title: 'dashboard',
+          title: '控制台',
           icon: 'dashboard',
           affix: true
         }

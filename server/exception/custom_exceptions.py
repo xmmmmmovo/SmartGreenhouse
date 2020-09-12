@@ -6,6 +6,13 @@ class ContentEmptyException(HTTPException):
     code = ResponseCode.params_error
     description = "字段不能为空!"
 
+class PasswordErrorException(HTTPException):
+    code = ResponseCode.db_error
+    description = "密码错误！"
+
+class DataNotSatisfyException(HTTPException):
+    code = ResponseCode.data_error
+    description = "字段未达到指定要求！"
 
 class DataNotFoundException(HTTPException):
     code = ResponseCode.data_not_found

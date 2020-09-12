@@ -10,7 +10,7 @@ jwt_manager = JWTManager()
 
 @jwt_manager.user_claims_loader
 def add_claims_to_access_token(user: User):
-    return {'roles': user.roles}
+    return {'roles': user.roles, 'username': user.username}
 
 
 @jwt_manager.user_identity_loader
