@@ -29,7 +29,6 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
           // Set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
           await MqttModule.Connect(UserModule.name)
-
         } catch (err) {
           // Remove token and redirect to login page
           UserModule.ResetToken()
