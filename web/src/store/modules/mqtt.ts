@@ -48,6 +48,35 @@ class Mqtt extends VuexModule implements IMqttState {
         message: '已成功连接mqtt服务器!',
         type: 'success'
       })
+
+      c.subscribe('sensor_data', (err) => {
+        if (!err) {
+          Message({
+            message: '已成功订阅主题!',
+            type: 'success'
+          })
+        } else {
+          Message({
+            message: '订阅主题失败！',
+            type: 'error'
+          })
+        }
+      })
+
+      c.on('message', (topic, payload) => {
+        if (topic === 'sensor_data') {
+          let recv = JSON.parse(payload.toString())
+          if (recv.fire === true) {
+
+          }
+          if (recv.illumination === true) {
+
+          }
+          if (recv.solid === true) {
+
+          }
+        }
+      })
     })
   }
 }

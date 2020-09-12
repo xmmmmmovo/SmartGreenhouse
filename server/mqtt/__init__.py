@@ -18,6 +18,7 @@ def handle_mqtt_connect(client, userdata, flags, rc):
         logger.info('Failed to connect to mqtt broker!')
 
     client.subscribe(sensor_data_topic)
+    client.subscribe(rfid_topic)
     client.on_message = handle_mqtt_message
 
 
