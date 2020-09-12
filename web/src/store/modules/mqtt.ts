@@ -1,7 +1,7 @@
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
 import store from '@/store'
 import mqtt from 'mqtt'
-import { Message } from 'element-ui'
+import { Message, Notification } from 'element-ui'
 
 export interface IMqttState {
   config: mqtt.IClientOptions
@@ -66,14 +66,23 @@ class Mqtt extends VuexModule implements IMqttState {
       c.on('message', (topic, payload) => {
         if (topic === 'sensor_data') {
           let recv = JSON.parse(payload.toString())
+          let notification: string = ''
           if (recv.fire === true) {
-
+            notification += '危险！有火焰存在！\n'
           }
           if (recv.illumination === true) {
-
+            notification += '警告！有植物需要光照！\n'
           }
           if (recv.solid === true) {
-
+            notification += '警告！有植物需要水源！\n'
+          }
+          if (notification !== '') {
+            Notification({
+              title: '警报！',
+              message: notification,
+              duration: 0,
+              type: 'warning'
+            })
           }
         }
       })
