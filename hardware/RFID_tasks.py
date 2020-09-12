@@ -6,17 +6,19 @@ from loguru import logger
 import paho.mqtt.client as mqtt
 import requests
 import os
+from config import config_
 
 reader = SimpleMFRC522()
 
 rfid_topic = 'rfid_log'
 mqtt_client: mqtt.Client = None
+mqtt_config = config_['mqtt']
 
-broker_url = '39.105.110.28'
-port = 8083
-user = 'emqx'
-pwd = 'public'
-transport = 'websockets'
+broker_url = mqtt_config['broker_url']
+port = mqtt_config['port']
+user = mqtt_config['user']
+pwd = mqtt_config['pwd']
+transport = mqtt_config['transport']
 
 data = {
     'uuid': '',

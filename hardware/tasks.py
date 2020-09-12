@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import json
 import paho.mqtt.client as mqtt
+from config import config_
 
 scheduler = APScheduler()
 
@@ -49,11 +50,12 @@ is_init = False
 sensor_data_topic = 'sensor_data'
 mqtt_client: mqtt.Client = None
 
-broker_url = '39.105.110.28'
-port = 8083
-user = 'emqx'
-pwd = 'public'
-transport = 'websockets'
+mqtt_config = config_['mqtt']
+broker_url = mqtt_config['broker_url']
+port = mqtt_config['port']
+user = mqtt_config['user']
+pwd = mqtt_config['pwd']
+transport = mqtt_config['transport']
 
 
 def connect_mqtt():

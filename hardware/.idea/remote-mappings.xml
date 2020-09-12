@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteMappingsManager">
+    <list>
+      <list>
+        <remote-mappings server-id="python@sshConfig://pi@192.168.0.104:22 password/usr/bin/python3" />
+      </list>
+    </list>
+  </component>
+</project>
