@@ -71,6 +71,37 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/info',
+    component: Layout,
+    meta: {
+      title: '信息管理',
+      icon: 'user',
+      affix: true
+    },
+    children: [
+      {
+        path: 'sensor',
+        component: () => import('@/views/info/sensor/index.vue'),
+        name: 'Sensor',
+        meta: {
+          title: '传感器信息',
+          icon: 'hardware',
+          affix: true
+        }
+      },
+      {
+        path: 'rfid',
+        component: () => import('@/views/info/rfid/index.vue'),
+        name: 'RFID',
+        meta: {
+          title: 'RFID记录信息',
+          icon: 'hardware',
+          affix: true
+        }
+      }
+    ]
+  },
+  {
     path: '*',
     redirect: '/404',
     meta: { hidden: true }
@@ -85,6 +116,11 @@ export const asyncRoutes: RouteConfig[] = [
   {
     path: '/user',
     component: Layout,
+    meta: {
+      title: '人员管理',
+      icon: 'user',
+      affix: true
+    },
     children: [
       {
         path: 'admin',
@@ -92,7 +128,17 @@ export const asyncRoutes: RouteConfig[] = [
         name: 'Admin',
         meta: {
           title: '用户管理',
-          icon: 'user',
+          icon: 'manage',
+          affix: true
+        }
+      },
+      {
+        path: 'distribute',
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/user/distribution/index.vue'),
+        name: 'Distribute',
+        meta: {
+          title: '人员派发',
+          icon: 'distribute',
           affix: true
         }
       }
