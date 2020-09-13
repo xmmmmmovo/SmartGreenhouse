@@ -8,7 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 
   @Component({
-    name: 'admin',
+    name: 'hardware',
     components: {}
   })
 export default class extends Vue {

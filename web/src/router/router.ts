@@ -26,7 +26,10 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/login',
     component: () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue'),
-    meta: { hidden: true }
+    meta: {
+      title: '登录界面',
+      hidden: true
+    }
   },
   {
     path: '/404',
@@ -51,6 +54,23 @@ export const constantRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/hardware',
+    component: Layout,
+    redirect: '/hardware',
+    children: [
+      {
+        path: 'hardware',
+        component: () => import('@/views/hardware/index.vue'),
+        name: 'Hardware',
+        meta: {
+          title: '硬件状态',
+          icon: 'hardware',
+          affix: true
+        }
+      }
+    ]
+  },
+  {
     path: '*',
     redirect: '/404',
     meta: { hidden: true }
@@ -63,9 +83,20 @@ export const constantRoutes: RouteConfig[] = [
  */
 export const asyncRoutes: RouteConfig[] = [
   {
-    path: '*',
-    redirect: '/404',
-    meta: { hidden: true }
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'admin',
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/user/admin/index.vue'),
+        name: 'Admin',
+        meta: {
+          title: '用户管理',
+          icon: 'user',
+          affix: true
+        }
+      }
+    ]
   }
 ]
 

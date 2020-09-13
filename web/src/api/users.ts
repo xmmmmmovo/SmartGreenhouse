@@ -17,5 +17,5 @@ export const login = (data: any) =>
 export const logout = () =>
   request({
     url: '/user/logout',
-    method: 'post'
+    method: 'delete'
   })

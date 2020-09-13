@@ -1,6 +1,6 @@
 <template>
   <div>
-    aaa
+    Admin
   </div>
 </template>
 

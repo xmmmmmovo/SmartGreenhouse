@@ -5,6 +5,7 @@ import { Message } from 'element-ui'
 import { Route } from 'vue-router'
 import { UserModule } from '@/store/modules/user'
 import { MqttModule } from '@/store/modules/mqtt'
+import { PermissionModule } from '@/store/modules/permissions'
 
 NProgress.configure({ showSpinner: false })
 
@@ -26,6 +27,8 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
         try {
           // Get user info, including roles
           await UserModule.GetUserInfo()
+          PermissionModule.GenerateRoutes(UserModule.roles)
+          router.addRoutes(PermissionModule.dynamicRoutes)
           // Set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
           await MqttModule.Connect(UserModule.name)

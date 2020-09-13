@@ -1,6 +1,6 @@
 <template>
   <div>
-    aaa
+    Manager
   </div>
 </template>
 

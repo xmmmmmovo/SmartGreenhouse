@@ -49,12 +49,12 @@ export default class extends Vue {
     let matched = this.$route.matched.filter(
       item => item.meta && item.meta.title
     )
-    const first = matched[0]
-    if (!this.isDashboard(first)) {
-      matched = [
-        { path: '/dashboard', meta: { title: 'Dashboard' } } as RouteRecord
-      ].concat(matched)
-    }
+    // const first = matched[0]
+    // if (!this.isDashboard(first)) {
+    //   matched = [
+    //     { path: '/dashboard', meta: { title: '控制台' } } as RouteRecord
+    //   ].concat(matched)
+    // }
     this.breadcrumbs = matched.filter(item => {
       return item.meta && item.meta.title && item.meta.breadcrumb !== false
     })
@@ -62,7 +62,7 @@ export default class extends Vue {
 
   private isDashboard(route: RouteRecord) {
     const name = route && route.meta && route.meta.title
-    return name === 'Dashboard'
+    return name === '控制台'
   }
 
   private pathCompile(path: string) {

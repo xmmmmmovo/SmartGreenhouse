@@ -117,10 +117,6 @@ export default class extends Vue {
     }
   }
 
-  created() {
-    document.title = '登录'
-  }
-
   mounted() {
     if (this.loginForm.username === '') {
       (this.$refs.username as Input).focus()
