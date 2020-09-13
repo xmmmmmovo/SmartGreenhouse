@@ -31,7 +31,7 @@ router.beforeEach(async(to: Route, _: Route, next: any) => {
           router.addRoutes(PermissionModule.dynamicRoutes)
           // Set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })
-          await MqttModule.Connect(UserModule.name)
+          MqttModule.Connect(UserModule.name)
         } catch (err) {
           // Remove token and redirect to login page
           UserModule.ResetToken()

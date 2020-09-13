@@ -17,7 +17,7 @@
       >
         <div class="avatar-wrapper">
           <div>
-            {{name}}
+            {{ name }}
           </div>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -45,6 +45,7 @@ import { AppModule } from '@/store/modules/app'
 import { UserModule } from '@/store/modules/user'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
+import { MqttModule } from '@/store/modules/mqtt'
 
 @Component({
   name: 'Navbar',
@@ -72,6 +73,7 @@ export default class extends Vue {
 
   private async logout() {
     await UserModule.LogOut()
+    await MqttModule.Disconnect()
     this.$router.push(`/login?redirect=${this.$route.fullPath}`)
   }
 }

@@ -88,6 +88,11 @@ class Mqtt extends VuexModule implements IMqttState {
       })
     })
   }
+  @Action
+  public async Disconnect() {
+    let c = this.client as unknown as mqtt.Client
+    c.end()
+  }
 }
 
 export const MqttModule = getModule(Mqtt)
