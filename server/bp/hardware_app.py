@@ -1,16 +1,20 @@
 from flask import Blueprint, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_claims
 
+from model.Pagination import Pagination
 from response import response_success
 import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
-    UnAuthorizedException, DataNotSatisfyException
+    UnAuthorizedException, DataNotSatisfyException, UserNotFoundException
 from utils.jwt_utils import permission_required
 from datetime import datetime
 from flask_loguru import logger
 from base64 import b64decode
 from mqtt import mqtt_client
+from requests import get
+from requests.auth import HTTPBasicAuth
+from config import config
 
 hardware_bp = Blueprint('hardware_app', __name__, url_prefix='/hardware')
 
@@ -63,3 +67,36 @@ def setup_threshold():
                         {'uuid': uuid, 'temperature_limit': temperature_limit, 'humidity_limit': humidity_limit})
 
     return response_success('修改成功', None)
+
+
+@hardware_bp.route('/get_hardware', methods=['GET'])
+@jwt_required
+def get_hardware_client_id():
+    claims = get_jwt_claims()
+    roles = claims.get('roles', None)
+    username = claims.get('username', None)
+    if claims is None or roles is None or username is None:
+        raise UserNotFoundException()
+    res = get(f"http://{config['mqtt']['broker_url']}:{config['mqtt']['http_api_port']}/api/v4/clients",
+              auth=HTTPBasicAuth(config['mqtt']['basic_auth_username'], config['mqtt']['basic_auth_password']))
+    if res.status_code != 200:
+        raise DBException()
+
+    if 'admin' not in roles:
+        pass
+
+    page = int(request.args.get('page', 1))
+    size = int(request.args.get('size', 9999))
+
+    res_json_data = res.json()['data']
+    total = len(res_json_data)
+    offset = (page - 1) * size
+
+    if offset > total:
+        data = []
+    elif page * size > total:
+        data = res_json_data[offset:]
+    else:
+        data = res_json_data[offset:offset + size]
+
+    return response_success('success', Pagination(page, size, data, total))

@@ -63,7 +63,7 @@ export const constantRoutes: RouteConfig[] = [
         component: () => import('@/views/hardware/index.vue'),
         name: 'Hardware',
         meta: {
-          title: '硬件状态',
+          title: '客户端状态',
           icon: 'hardware',
           affix: true
         }
@@ -75,7 +75,7 @@ export const constantRoutes: RouteConfig[] = [
     component: Layout,
     meta: {
       title: '信息管理',
-      icon: 'user',
+      icon: 'info',
       affix: true
     },
     children: [
@@ -85,7 +85,7 @@ export const constantRoutes: RouteConfig[] = [
         name: 'Sensor',
         meta: {
           title: '传感器信息',
-          icon: 'hardware',
+          icon: 'sensor',
           affix: true
         }
       },
@@ -95,7 +95,7 @@ export const constantRoutes: RouteConfig[] = [
         name: 'RFID',
         meta: {
           title: 'RFID记录信息',
-          icon: 'hardware',
+          icon: 'rfid',
           affix: true
         }
       }

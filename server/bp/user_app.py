@@ -7,6 +7,8 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_claims
 from model import user
 from flask_loguru import logger
 
+from utils.jwt_utils import permission_required
+
 user_bp = Blueprint('user_app', __name__, url_prefix='/user')
 
 
@@ -63,6 +65,8 @@ def info():
 
 
 @user_bp.route("/change-password", methods=['POST'])
+@jwt_required
+@permission_required(['admin'])
 def change_password():
     claims = get_jwt_claims()
 

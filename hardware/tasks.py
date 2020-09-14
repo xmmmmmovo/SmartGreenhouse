@@ -48,6 +48,8 @@ fire_regular = True
 solid_regular = True
 illumination_regular = True
 is_init = False
+is_temperature_limit = True
+is_humidity_limit = True
 
 sensor_data_topic = 'sensor_data'
 setup_threshold_topic = 'setup_threshold'
@@ -64,11 +66,25 @@ transport = mqtt_config['transport']
 def connect_mqtt():
     global mqtt_client
 
+    def handle_mqtt_message(client, userdata, message):
+        logger.info(f'topic: {message.topic}, message: {message.payload.decode()}')
+        if message.topic == setup_threshold_topic:
+            msg = json.loads(message.payload)
+            data['temperature_limit'] = msg['temperature_limit']
+            data['humidity_limit'] = msg['humidity_limit']
+            f = open('./c.json', 'w', encoding='utf-8')
+            f.write(json.dumps({'uuid': data['uuid'], 'temperature_limit': data['temperature_limit'],
+                                'humidity_limit': data['humidity_limit']}))
+            f.close()
+
     def handle_mqtt_connect(client, userdata, flags, rc):
         if rc == 0:
             logger.info('Connected to mqtt broker!')
         else:
             logger.info('Failed to connect to mqtt broker!')
+
+        client.subscribe(setup_threshold_topic)
+        client.on_message = handle_mqtt_message
 
     mqtt_client = mqtt.Client(data['uuid'] + '_sensor_client', transport='websockets')
     mqtt_client.username_pw_set(user, pwd)
@@ -85,7 +101,11 @@ def alive_task():
 
 @scheduler.task('interval', id='temperature_task', seconds=30, misfire_grace_time=25)
 def temperature_task():
+    global is_temperature_limit, is_humidity_limit
     logger.info('start temperature collect!')
+
+    is_temperature_limit = True
+    is_humidity_limit = True
     try:
         # Print the values to the serial port
         temperature_c = dht_device.temperature
@@ -98,6 +118,10 @@ def temperature_task():
         )
         data['temperature'] = "{:.1f}".format(temperature_c)
         data['humidity'] = "{}".format(humidity)
+        if float(data['temperature']) > float(data['temperature_limit']):
+            is_temperature_limit = False
+        if float(data['humidity']) > float(data['humidity_limit']):
+            is_temperature_limit = False
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
         logger.error(error.args[0])
@@ -142,7 +166,7 @@ def illumination_task():
 @scheduler.task('interval', id='regular_task', seconds=3, misfire_grace_time=1)
 def regular_task():
     global is_init
-    if fire_regular and solid_regular and illumination_regular:
+    if fire_regular and solid_regular and illumination_regular and is_temperature_limit and is_humidity_limit:
         if not is_init:
             # change to green
             pwm_r.ChangeDutyCycle(0)
@@ -154,7 +178,7 @@ def regular_task():
         pwm_b.ChangeDutyCycle(100)
         is_init = False
 
-    logger.info(f"{fire_regular}/{solid_regular}/{illumination_regular}")
+    logger.info(f"{fire_regular}/{solid_regular}/{illumination_regular}/{is_temperature_limit}/{is_humidity_limit}")
 
 
 @scheduler.task('interval', id='upload_task', minutes=1, misfire_grace_time=30)

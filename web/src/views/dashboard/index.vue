@@ -26,7 +26,7 @@ export default class extends Vue {
 
     created() {
       if (!this.roles.includes('admin')) {
-        this.currentRole = 'editor-dashboard'
+        this.currentRole = 'manager-dashboard'
       }
     }
 }

@@ -67,6 +67,12 @@ class Mqtt extends VuexModule implements IMqttState {
         if (topic === 'sensor_data') {
           let recv = JSON.parse(payload.toString())
           let notification: string = ''
+          if (+recv.temperature > +recv.temperature_limit) {
+            notification += '危险！温度失控！\n'
+          }
+          if (+recv.humidity > +recv.humidity_limit) {
+            notification += '危险！湿度失控！\n'
+          }
           if (recv.fire === true) {
             notification += '危险！有火焰存在！\n'
           }
