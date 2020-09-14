@@ -49,27 +49,6 @@ def check_uuid(uuid: str):
     return response_success('success', id)
 
 
-@hardware_bp.route('/setup_threshold', methods=['PUT'])
-@jwt_required
-@permission_required(['admin'])
-def setup_threshold():
-    temperature_limit = request.json.get('temperature_limit', None)
-    humidity_limit = request.json.get('humidity_limit', None)
-    huuid = request.json.get('uuid', None)
-
-    if temperature_limit is None or humidity_limit is None or huuid is None:
-        raise DataNotSatisfyException()
-
-    is_succ = update_threshold_by_uuid(temperature_limit, humidity_limit, uuid)
-    if not is_succ:
-        raise DBException()
-
-    mqtt_client.publish('setup_threshold',
-                        {'uuid': uuid, 'temperature_limit': temperature_limit, 'humidity_limit': humidity_limit})
-
-    return response_success('修改成功', None)
-
-
 @hardware_bp.route('/get_hardware', methods=['GET'])
 @jwt_required
 def get_hardware_client_id():
@@ -88,16 +67,12 @@ def get_hardware_client_id():
     ordered = request.args.get('ordered', '+id')
     query = request.args.get('query', '')
 
-    logger.info(query)
-    logger.info(ordered[1:])
-
     if 'admin' in roles:
         if query != '':
             hardware_list = get_hardware_pagination(page, size, ordered, f'WHERE `{ordered[1:]}` LIKE %s', f'%{query}%')
         else:
             hardware_list = get_hardware_pagination(page, size, ordered, '')
         total = count_total('')
-        logger.info(hardware_list)
     else:
         if query != '':
             hardware_list = get_hardware_pagination_by_username(username, page, size, ordered,
@@ -124,6 +99,8 @@ def get_hardware_client_id():
 
 
 @hardware_bp.route('/hardware/<int:id>', methods=['PUT'])
+@jwt_required
+@permission_required(['admin'])
 def update_hardware(id):
     name = request.json.get('name', None)
     up = request.json.get('up', None)
@@ -139,12 +116,16 @@ def update_hardware(id):
     is_succ = update_hardware_by_id(id, name, humidity_limit, temperature_limit)
     if not is_succ:
         raise DBException()
+    mqtt_client.publish('setup_threshold',
+                        {'uuid': uuid, 'temperature_limit': temperature_limit, 'humidity_limit': humidity_limit})
     return response_success('success',
                             {'id': id, 'up': up, 'uuid': uuid, 'name': name, 'humidity_limit': str(humidity_limit),
                              'temperature_limit': str(temperature_limit)})
 
 
 @hardware_bp.route('/hardware/<int:id>', methods=['DELETE'])
+@jwt_required
+@permission_required(['admin'])
 def delete_hardware(id):
     up = request.args.get('up', None)
     if up is None or not up:

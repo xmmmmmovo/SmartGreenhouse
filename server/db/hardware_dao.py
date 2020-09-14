@@ -33,7 +33,6 @@ def update_threshold_by_uuid(uuid, temperature_limit, humidity_limit):
 
 def get_hardware_pagination(page, size, ordered, where_sql, *args):
     logger.info('get_hardware_pagination')
-    logger.info(f"SELECT * FROM hardware {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s")
     return MysqlOp().select_all(f"SELECT * FROM hardware {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
                                 (*args, size, (page - 1) * size))
 
@@ -48,14 +47,17 @@ def get_hardware_pagination_by_username(username, page, size, ordered, where_sql
 
 
 def count_total(where_sql, *args):
+    logger.info('count_total')
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from hardware {where_sql}', (*args,))
 
 
 def update_hardware_by_id(id, name, humidity_limit, temperature_limit):
+    logger.info('update_hardware_by_id')
     return MysqlOp().op_sql(
         'UPDATE hardware SET `name` = %s, temperature_limit = %s, humidity_limit = %s WHERE id = %s',
         (name, temperature_limit, humidity_limit, id))
 
 
 def delete_hardware_by_id(id):
+    logger.info('delete_hardware_by_id')
     return MysqlOp().op_sql('DELETE FROM hardware WHERE id = %s', (id))

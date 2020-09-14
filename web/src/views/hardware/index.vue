@@ -117,6 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="isAdmin"
         label="操作"
         align="center"
         width="230"
@@ -208,13 +209,14 @@ import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
 import { IHardwareData } from '@/api/types'
+import { UserModule } from '@/store/modules/user'
 
-  @Component({
-    name: 'HardwareTable',
-    components: {
-      Pagination
-    }
-  })
+@Component({
+  name: 'HardwareTable',
+  components: {
+    Pagination
+  }
+})
 export default class extends Vue {
     private total = 0
     private list: IHardwareData[] = []
@@ -238,6 +240,7 @@ export default class extends Vue {
       { label: 'id' }
     ]
     private downloadLoading = false
+    private isAdmin = UserModule.roles.includes('admin')
 
     private rules = {
       name: [{ required: true, message: 'name is required', trigger: 'change' }],

@@ -6,3 +6,14 @@ export interface IHardwareData {
   uuid: string,
   id: number
 }
+
+export interface ISensorData {
+  id: number,
+  hardware_uuid: string,
+  temperature: number,
+  humidity: number,
+  is_fire: boolean,
+  is_dry: boolean,
+  is_illum: boolean,
+  record_time: string
+}
