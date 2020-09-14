@@ -1,4 +1,5 @@
 from db import MysqlOp
+from .user_dao import select_user_by_username
 from flask_loguru import logger
 
 
@@ -28,3 +29,22 @@ def update_threshold_by_uuid(uuid, temperature_limit, humidity_limit):
     logger.info('update_threshold_by_uuid')
     return MysqlOp().op_sql('UPDATE hardware SET temperature_limit = %s, humidity_limit = %s WHERE uuid = %s',
                             (temperature_limit, humidity_limit, uuid))
+
+
+def get_hardware_pagination(page, size, ordered, where_sql, *args):
+    logger.info('get_hardware_pagination')
+    return MysqlOp().select_all(f'SELECT * FROM hardware {where_sql} ORDER BY %s ASC LIMIT %s OFFSET %s',
+                                (*args, ordered, size, (page - 1) * size))
+
+
+def get_hardware_pagination_by_username(username, page, size, ordered, where_sql, *args):
+    logger.info('get_hardware_pagination_by_username')
+    return MysqlOp().select_all(
+        f'SELECT * FROM hardware WHERE uuid IN '
+        f'(SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s)) {where_sql}'
+        f'ORDER BY %s ASC LIMIT %s OFFSET %s',
+        (username, *args, ordered, size, (page - 1) * size))
+
+
+def count_total(where_sql, *args):
+    return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from hardware {where_sql}', (*args,))

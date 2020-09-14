@@ -4,9 +4,11 @@ from flask_jwt_extended import jwt_required, get_jwt_claims
 from model.Pagination import Pagination
 from response import response_success
 import uuid
-from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid
+from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid, get_hardware_pagination, \
+    get_hardware_pagination_by_username, count_total
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException
+from utils.decimal_utils import DecimalEncoder
 from utils.jwt_utils import permission_required
 from datetime import datetime
 from flask_loguru import logger
@@ -82,21 +84,28 @@ def get_hardware_client_id():
     if res.status_code != 200:
         raise DBException()
 
-    if 'admin' not in roles:
-        pass
-
     page = int(request.args.get('page', 1))
     size = int(request.args.get('size', 9999))
+    ordered = request.args.get('ordered', '+id')
 
-    res_json_data = res.json()['data']
-    total = len(res_json_data)
-    offset = (page - 1) * size
-
-    if offset > total:
-        data = []
-    elif page * size > total:
-        data = res_json_data[offset:]
+    if 'admin' in roles:
+        hardware_list = get_hardware_pagination(page, size, ordered, '')
+        total = count_total('')
     else:
-        data = res_json_data[offset:offset + size]
+        hardware_list = get_hardware_pagination_by_username(username, page, size, ordered, '')
+        total = count_total(
+            'WHERE uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))',
+            username)
 
-    return response_success('success', Pagination(page, size, data, total))
+    res_json_data = list(map(lambda res: res[:36], filter(lambda res: res.endswith('_sensor_client'),
+                                                          map(lambda res: res['clientid'], res.json()['data']))))
+
+    for i in range(len(hardware_list)):
+        if hardware_list[i]['uuid'] in res_json_data:
+            hardware_list[i]['up'] = True
+        else:
+            hardware_list[i]['up'] = False
+        hardware_list[i]['temperature_limit'] = float(hardware_list[i]['temperature_limit'])
+        hardware_list[i]['humidity_limit'] = float(hardware_list[i]['humidity_limit'])
+
+    return response_success('success', Pagination(page, size, hardware_list, total))

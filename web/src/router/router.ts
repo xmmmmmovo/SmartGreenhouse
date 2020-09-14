@@ -56,7 +56,7 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/hardware',
     component: Layout,
-    redirect: '/hardware',
+    redirect: '/hardware/hardware',
     children: [
       {
         path: 'hardware',
@@ -73,6 +73,7 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/info',
     component: Layout,
+    redirect: '/info/sensor',
     meta: {
       title: '信息管理',
       icon: 'info',
@@ -116,6 +117,7 @@ export const asyncRoutes: RouteConfig[] = [
   {
     path: '/user',
     component: Layout,
+    redirect: '/user/admin',
     meta: {
       title: '人员管理',
       icon: 'user',

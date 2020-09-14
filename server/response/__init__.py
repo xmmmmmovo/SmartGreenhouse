@@ -12,12 +12,12 @@ class Response:
     data: Any
 
 
-def response_success(msg: str = 'success', data: Any = None) -> str:
+def response_success(msg: str = 'success', data: Any = None, *args, **kwargs) -> str:
     return jsonify(Response(
         code=ResponseCode.success,
         msg=msg,
         data=data
-    ))
+    ), *args, **kwargs)
 
 
 def response_fail(code: int, msg: str, data: Any) -> str:

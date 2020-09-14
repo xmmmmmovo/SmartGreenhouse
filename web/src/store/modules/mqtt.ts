@@ -86,7 +86,7 @@ class Mqtt extends VuexModule implements IMqttState {
             Notification({
               title: '警报！',
               message: notification,
-              duration: 0,
+              duration: 60000,
               type: 'warning'
             })
           }
