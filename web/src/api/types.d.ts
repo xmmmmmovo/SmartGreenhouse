@@ -3,5 +3,6 @@ export interface IHardwareData {
   name: string,
   temperature_limit: number,
   up: boolean,
-  uuid: string
+  uuid: string,
+  id: number
 }

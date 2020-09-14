@@ -72,6 +72,74 @@
         </template>
       </el-table-column>
 
+      <el-table-column
+        label="名称"
+        min-width="65px"
+      >
+        <template slot-scope="{row}">
+          {{ row.name }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="uuid"
+        min-width="120px"
+      >
+        <template slot-scope="{row}">
+          {{ row.uuid }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="温度阈值"
+      >
+        <template slot-scope="{row}">
+          {{ row.temperature_limit }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="湿度阈值"
+      >
+        <template slot-scope="{row}">
+          {{ row.humidity_limit }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="是否在线"
+        class-name="status-col"
+        width="100"
+      >
+        <template slot-scope="{row}">
+          <el-tag :type="row.up ? 'success' : 'info'">
+            {{ row.up ? '在线': '已下线' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        width="230"
+        class-name="fixed-width"
+      >
+        <template slot-scope="{row, $index}">
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleUpdate(row)"
+          >
+            {{ '编辑' }}
+          </el-button>
+          <el-button
+            v-show="!row.up"
+            size="mini"
+            type="danger"
+            @click="handleDelete(row, $index)"
+          >
+            {{ '删除' }}
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -81,6 +149,53 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
+
+    <el-dialog
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+    >
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="tempHardwareData"
+        label-position="left"
+        label-width="100px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-form-item
+          label="名称"
+          prop="name"
+        >
+          <el-input v-model="tempHardwareData.name" />
+        </el-form-item>
+        <el-form-item
+          label="温度阈值"
+          prop="temperature_limit"
+        >
+          <el-input v-model="tempHardwareData.temperature_limit" />
+        </el-form-item>
+        <el-form-item
+          label="湿度阈值"
+          prop="humidity_limit"
+        >
+          <el-input v-model="tempHardwareData.humidity_limit" />
+        </el-form-item>
+      </el-form>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          {{ '取消' }}
+        </el-button>
+        <el-button
+          type="primary"
+          @click="updateData()"
+        >
+          {{ '更新数据' }}
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -91,7 +206,7 @@ import { cloneDeep } from 'lodash'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
-import { getHardwareList } from '@/api/hardware'
+import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
 import { IHardwareData } from '@/api/types'
 
   @Component({
@@ -101,55 +216,118 @@ import { IHardwareData } from '@/api/types'
     }
   })
 export default class extends Vue {
-  private total = 0
-  private list: IHardwareData[] = []
-  private listLoading = true
-  private listQuery = {
-    page: 1,
-    size: 20,
-    ordered: '+id',
-    query: '',
-    type: 'name'
-  }
-  private sortOptions = [
-    { label: 'Ascending', key: '+' + this.listQuery.type },
-    { label: 'Descending', key: '-' + this.listQuery.type }
-  ]
-  private typeOptions = [
-    { label: 'humidity_limit' },
-    { label: 'temperature_limit' },
-    { label: 'name' },
-    { label: 'uuid' }
-  ]
-  private downloadLoading = false
+    private total = 0
+    private list: IHardwareData[] = []
+    private listLoading = true
+    private listQuery = {
+      page: 1,
+      size: 20,
+      ordered: '+id',
+      query: '',
+      type: 'name'
+    }
+    private sortOptions = [
+      { label: 'Ascending', key: '+' + this.listQuery.type },
+      { label: 'Descending', key: '-' + this.listQuery.type }
+    ]
+    private typeOptions = [
+      { label: 'humidity_limit' },
+      { label: 'temperature_limit' },
+      { label: 'name' },
+      { label: 'uuid' }
+    ]
+    private downloadLoading = false
 
-  created() {
-    this.getList()
-  }
+    private rules = {
+      name: [{ required: true, message: 'name is required', trigger: 'change' }],
+      temperature_limit: [{ required: true, message: 'temperature_limit is required', trigger: 'change' }],
+      humidity_limit: [{ required: true, message: 'humidity_limit is required', trigger: 'change' }]
+    }
+    private dialogStatus = ''
+    private textMap = {
+      update: 'Edit',
+      create: 'Create'
+    }
+    private dialogFormVisible = false
+    private tempHardwareData = defaultHardwareData
 
-  private async getList() {
-    this.listLoading = true
-    const { data } = await getHardwareList(this.listQuery)
-    this.list = data.list
-    this.total = data.total
-    this.listLoading = false
-  }
+    created() {
+      this.getList()
+    }
 
-  private handleFilter() {
-    console.log(this.listQuery)
-    this.listQuery.page = 1
-    this.getList()
-  }
+    private async getList() {
+      this.listLoading = true
+      const { data } = await getHardwareList(this.listQuery)
+      this.list = data.list
+      this.total = data.total
+      console.log(this.list)
+      this.listLoading = false
+    }
 
-  private handleDownload() {
-    this.downloadLoading = true
-    const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-    const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-    const data = formatJson(filterVal, this.list)
-    exportJson2Excel(tHeader, data, 'table-list')
-    this.downloadLoading = false
-  }
+    private handleUpdate(row: any) {
+      this.tempHardwareData = Object.assign({}, row)
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        (this.$refs.dataForm as Form).clearValidate()
+      })
+    }
+
+    private handleFilter() {
+      console.log(this.listQuery)
+      this.listQuery.page = 1
+      this.getList()
+    }
+
+    private updateData() {
+      (this.$refs.dataForm as Form).validate(async(valid) => {
+        if (valid) {
+          const tempData = Object.assign({}, this.tempHardwareData)
+          const { data } = await updateHardwareData(tempData.id, tempData)
+          console.log(data)
+          const index = this.list.findIndex(v => v.id === data.id)
+          this.list.splice(index, 1, data)
+          this.dialogFormVisible = false
+          this.$notify({
+            title: '成功',
+            message: '更新成功',
+            type: 'success',
+            duration: 2000
+          })
+        }
+      })
+    }
+
+    private handleDelete(row: any, index: number) {
+      this.$alert('请确认是否删除', '确认删除', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        const tempData = Object.assign({}, this.tempHardwareData)
+        await deleteHardwareData(tempData.id, { 'up': tempData.up })
+        this.$notify({
+          title: '成功',
+          message: '成功删除',
+          type: 'success',
+          duration: 2000
+        })
+        this.list.splice(index, 1)
+      })
+    }
+
+    private handleDownload() {
+      this.downloadLoading = true
+      const tHeader = ['名称', '是否在线', 'uuid', '温度阈值', '湿度阈值']
+      const filterVal = ['name', 'up', 'uuid', 'temperature_limit', 'humidity_limit']
+      const data = formatJson(filterVal, this.list)
+      exportJson2Excel(tHeader, data, '硬件信息')
+      this.downloadLoading = false
+    }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+  .filter-container {
+    margin-bottom: 20px;
+  }
 </style>

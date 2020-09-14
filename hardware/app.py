@@ -27,6 +27,15 @@ def load_config():
         f = open('./c.json', 'r', encoding='utf-8')
         j = loads(f.read())
         data['uuid'] = j['uuid']
+        res = requests.get(f"http://192.168.137.1:9000/hardware/code/{data['uuid']}")
+        if res.json()['code'] != 200:
+            now = datetime.now()
+            data['uuid'] = requests.post('http://192.168.137.1:9000/hardware/code',
+                                         headers={'auth': b64encode(
+                                             f'{now.hour}/{now.minute}'.encode(encoding='utf-8'))}).json()['data']
+            f = open('./c.json', 'w', encoding='utf-8')
+            f.write(dumps({'uuid': data['uuid'], 'temperature_limit': 35.00, 'humidity_limit': 50.00}))
+            f.close()
         data['temperature_limit'] = j['temperature_limit']
         data['humidity_limit'] = j['humidity_limit']
         logger.info('读取成功')

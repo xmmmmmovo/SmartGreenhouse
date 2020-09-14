@@ -5,9 +5,9 @@ from model.Pagination import Pagination
 from response import response_success
 import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid, get_hardware_pagination, \
-    get_hardware_pagination_by_username, count_total
+    get_hardware_pagination_by_username, count_total, update_hardware_by_id, delete_hardware_by_id
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
-    UnAuthorizedException, DataNotSatisfyException, UserNotFoundException
+    UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException
 from utils.decimal_utils import DecimalEncoder
 from utils.jwt_utils import permission_required
 from datetime import datetime
@@ -41,7 +41,7 @@ def gen_code():
 
 
 @hardware_bp.route('/code/<string:uuid>', methods=['GET'])
-def get_id_by_uuid_route(uuid: str):
+def check_uuid(uuid: str):
     if uuid is None:
         raise ContentEmptyException()
     id = get_id_by_uuid(uuid)
@@ -105,7 +105,39 @@ def get_hardware_client_id():
             hardware_list[i]['up'] = True
         else:
             hardware_list[i]['up'] = False
-        hardware_list[i]['temperature_limit'] = float(hardware_list[i]['temperature_limit'])
-        hardware_list[i]['humidity_limit'] = float(hardware_list[i]['humidity_limit'])
+        hardware_list[i]['temperature_limit'] = str(hardware_list[i]['temperature_limit'])
+        hardware_list[i]['humidity_limit'] = str(hardware_list[i]['humidity_limit'])
 
     return response_success('success', Pagination(page, size, hardware_list, total['len']))
+
+
+@hardware_bp.route('/hardware/<int:id>', methods=['PUT'])
+def update_hardware(id):
+    name = request.json.get('name', None)
+    up = request.json.get('up', None)
+    uuid = request.json.get('uuid', None)
+    humidity_limit = request.json.get('humidity_limit', None)
+    temperature_limit = request.json.get('temperature_limit', None)
+
+    if name is None or humidity_limit is None or up is None \
+            or uuid is None or temperature_limit is None \
+            or temperature_limit is None:
+        raise ContentEmptyException()
+
+    is_succ = update_hardware_by_id(id, name, humidity_limit, temperature_limit)
+    if not is_succ:
+        raise DBException()
+    return response_success('success',
+                            {'id': id, 'up': up, 'uuid': uuid, 'name': name, 'humidity_limit': str(humidity_limit),
+                             'temperature_limit': str(temperature_limit)})
+
+
+@hardware_bp.route('/hardware/<int:id>', methods=['DELETE'])
+def delete_hardware(id):
+    up = request.args.get('up', None)
+    if up is None or not up:
+        raise CannotDeleteOnlineHardwareException()
+    is_succ = delete_hardware_by_id(id)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', 'success')

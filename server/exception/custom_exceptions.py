@@ -18,6 +18,9 @@ class DataNotFoundException(HTTPException):
     code = ResponseCode.data_not_found
     description = "未找到需要的数据!"
 
+class CannotDeleteOnlineHardwareException(HTTPException):
+    code = ResponseCode.cannot_delete
+    description = "无法删除还在的线客户端！"
 
 class DBException(HTTPException):
     code = ResponseCode.db_error

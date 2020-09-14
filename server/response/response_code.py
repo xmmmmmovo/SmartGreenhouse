@@ -11,3 +11,4 @@ class ResponseCode(IntEnum):
     db_error = 10007
     unauthorized = 403
     data_error = 10008
+    cannot_delete = 10009
