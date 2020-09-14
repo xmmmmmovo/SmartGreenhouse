@@ -8,8 +8,6 @@ sensor_data_topic = 'sensor_data'
 rfid_topic = 'rfid_log'
 mqtt_config = config['mqtt']
 
-mqtt_client: mqtt.Client = None
-
 
 def handle_mqtt_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -35,9 +33,12 @@ def handle_mqtt_message(client, userdata, message):
 
 
 def connect_mqtt():
-    global mqtt_client
     mqtt_client = mqtt.Client(mqtt_config['client_id'], transport=mqtt_config['transport'])
     mqtt_client.username_pw_set(mqtt_config['user'], mqtt_config['pwd'])
     mqtt_client.on_connect = handle_mqtt_connect
     mqtt_client.connect(mqtt_config['broker_url'], mqtt_config['port'])
     mqtt_client.loop_start()
+    return mqtt_client
+
+
+mqtt_client: mqtt.Client = connect_mqtt()

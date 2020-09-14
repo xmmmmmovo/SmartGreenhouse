@@ -36,7 +36,6 @@ if __name__ == '__main__':
         'LOG_PATH': '../log',
         'LOG_NAME': 'run.log'
     })
-    connect_mqtt()
     redis.init_app(app)
     jwt_manager.init_app(app)
     bcrypt.init_app(app)

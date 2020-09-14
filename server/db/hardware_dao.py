@@ -22,3 +22,9 @@ def insert_sensor_data(temperature: str, humidity: str, uuid: str, fire: bool, i
 def insert_rfid_log(user_id, hardware_uuid):
     logger.info('insert_rfid_log')
     return MysqlOp().op_sql('INSERT INTO RFID_log (hardware_uuid,, user_id) VALUES (%s, %s)', (hardware_uuid, user_id))
+
+
+def update_threshold_by_uuid(uuid, temperature_limit, humidity_limit):
+    logger.info('update_threshold_by_uuid')
+    return MysqlOp().op_sql('UPDATE hardware SET temperature_limit = %s, humidity_limit = %s WHERE uuid = %s',
+                            (temperature_limit, humidity_limit, uuid))

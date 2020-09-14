@@ -1,3 +1,7 @@
+from base64 import b64encode
+from datetime import datetime
+from json import dumps, loads
+
 import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import time
@@ -29,16 +33,26 @@ data = {
 
 def load_config():
     logger.info(f'开始读取配置信息')
-    if os.path.exists('./uuid'):
-        f = open('./uuid', 'r', encoding='utf-8')
-        data['uuid'] = f.read().strip()
+    if os.path.exists('./c.json'):
+        f = open('./c.json', 'r', encoding='utf-8')
+        j = loads(f.read())
+        data['uuid'] = j['uuid']
+        data['temperature_limit'] = j['temperature_limit']
+        data['humidity_limit'] = j['humidity_limit']
         logger.info('读取成功')
+        f.close()
     else:
         logger.info('未找到，正在从云端获取')
-        data['uuid'] = requests.post('http://192.168.137.1:9000/hardware/code').json()['data']
-        f = open('./uuid', 'w', encoding='utf-8')
-        f.write(data['uuid'])
-    f.close()
+        now = datetime.now()
+        data['uuid'] = requests.post('http://192.168.137.1:9000/hardware/code',
+                                     headers={'auth': b64encode(
+                                         f'{now.hour}/{now.minute}'.encode(encoding='utf-8'))}).json()['data']
+        if data['uuid'] is None:
+            logger.error('获取失败！请检查网络或验证数据！')
+        else:
+            f = open('./c.json', 'w', encoding='utf-8')
+            f.write(dumps({'uuid': data['uuid'], 'temperature_limit': 35.00, 'humidity_limit': 50.00}))
+            f.close()
 
 
 def connect_mqtt():

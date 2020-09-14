@@ -40,7 +40,9 @@ data = {
     'humidity': '0',
     'fire': True,
     'illumination': True,
-    'solid': True
+    'solid': True,
+    'temperature_limit': 35.00,
+    'humidity_limit': 50.00
 }
 fire_regular = True
 solid_regular = True
@@ -48,6 +50,7 @@ illumination_regular = True
 is_init = False
 
 sensor_data_topic = 'sensor_data'
+setup_threshold_topic = 'setup_threshold'
 mqtt_client: mqtt.Client = None
 
 mqtt_config = config_['mqtt']

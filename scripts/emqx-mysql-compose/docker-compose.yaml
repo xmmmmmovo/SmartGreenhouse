@@ -1,0 +1,41 @@
+version: '3.6'
+
+services:
+  emqx:
+    image: emqx/emqx:v4.0.0
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8883:8883
+      - 8084:8084
+      - 18083:18083
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - "EMQX_LISTENER__SSL__EXTERNAL__KEYFILE=/home/ssl/key.pem"
+      - "EMQX_LISTENER__SSL__EXTERNAL__CERTFILE=/home/ssl/cert.pem"
+      - "EMQX_LISTENER__SSL__EXTERNAL__CACERTFILE=/home/ssl/cert.pem"
+      - "EMQX_LISTENER__WSS__EXTERNAL__KEYFILE=/home/ssl/key.pem"
+      - "EMQX_LISTENER__WSS__EXTERNAL__CERTFILE=/home/ssl/cert.pem"
+      - "EMQX_LISTENER__WSS__EXTERNAL__CACERTFILE=/home/ssl/cert.pem"
+      - EMQX_ALLOW_ANONYMOUS=false
+      - EMQX_AUTH__MYSQL__USERNAME=root
+      - EMQX_AUTH__MYSQL__PASSWORD=mx/58MFuLJ6^%.q
+      - EMQX_AUTH__MYSQL__DATABASE=mqtt
+      - "EMQX_AUTH__MYSQL__SERVER=db:3306"
+      - "EMQX_AUTH__MYSQL__AUTH_QUERY=select password from mqtt_user where username = '%u' limit 1"
+      - "EMQX_AUTH__MYSQL__SUPER_QUERY=select is_superuser from mqtt_user where username = '%u' limit 1"
+      - "EMQX_AUTH__MYSQL__ACL_QUERY=select allow, ipaddr, username, clientid, access, REPLACE(topic,'$$user','%c') from mqtt_acl where ipaddr = '%a' or username = '%u' or username = '$$all' or clientid = '%c'"
+      - EMQX_LOADED_PLUGINS="emqx_recon,emqx_retainer,emqx_management,emqx_dashboard,emqx_auth_mysql"
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /home/ssl:/home/ssl
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=mx/58MFuLJ6^%.q
+    volumes:
+      - ./config/mysql:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306

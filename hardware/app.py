@@ -10,6 +10,7 @@ import requests
 from tasks import data, connect_mqtt
 from base64 import b64encode
 from datetime import datetime
+from json import loads, dumps
 
 app = Flask(__name__)
 log = Logger()
@@ -22,9 +23,12 @@ def hello_world():
 
 def load_config():
     logger.info(f'开始读取配置信息')
-    if os.path.exists('./uuid'):
-        f = open('./uuid', 'r', encoding='utf-8')
-        data['uuid'] = f.read().strip()
+    if os.path.exists('./c.json'):
+        f = open('./c.json', 'r', encoding='utf-8')
+        j = loads(f.read())
+        data['uuid'] = j['uuid']
+        data['temperature_limit'] = j['temperature_limit']
+        data['humidity_limit'] = j['humidity_limit']
         logger.info('读取成功')
         f.close()
     else:
@@ -36,8 +40,8 @@ def load_config():
         if data['uuid'] is None:
             logger.error('获取失败！请检查网络或验证数据！')
         else:
-            f = open('./uuid', 'w', encoding='utf-8')
-            f.write(data['uuid'])
+            f = open('./c.json', 'w', encoding='utf-8')
+            f.write(dumps({'uuid': data['uuid'], 'temperature_limit': 35.00, 'humidity_limit': 50.00}))
             f.close()
 
 

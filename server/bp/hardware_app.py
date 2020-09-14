@@ -3,13 +3,14 @@ from flask_jwt_extended import jwt_required
 
 from response import response_success
 import uuid
-from db.hardware_dao import insert_hardware, get_id_by_uuid
+from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException
 from utils.jwt_utils import permission_required
 from datetime import datetime
 from flask_loguru import logger
 from base64 import b64decode
+from mqtt import mqtt_client
 
 hardware_bp = Blueprint('hardware_app', __name__, url_prefix='/hardware')
 
@@ -43,7 +44,7 @@ def get_id_by_uuid_route(uuid: str):
     return response_success('success', id)
 
 
-@hardware_bp.route('/setup_threshold', methods=['POST'])
+@hardware_bp.route('/setup_threshold', methods=['PUT'])
 @jwt_required
 @permission_required(['admin'])
 def setup_threshold():
@@ -54,5 +55,11 @@ def setup_threshold():
     if temperature_limit is None or humidity_limit is None or huuid is None:
         raise DataNotSatisfyException()
 
+    is_succ = update_threshold_by_uuid(temperature_limit, humidity_limit, uuid)
+    if not is_succ:
+        raise DBException()
 
+    mqtt_client.publish('setup_threshold',
+                        {'uuid': uuid, 'temperature_limit': temperature_limit, 'humidity_limit': humidity_limit})
 
+    return response_success('修改成功', None)
