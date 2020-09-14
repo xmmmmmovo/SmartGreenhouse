@@ -224,7 +224,7 @@ export default class extends Vue {
       size: 20,
       ordered: '+id',
       query: '',
-      type: 'name'
+      type: 'id'
     }
     private sortOptions = [
       { label: 'Ascending', key: '+' + this.listQuery.type },
@@ -234,7 +234,8 @@ export default class extends Vue {
       { label: 'humidity_limit' },
       { label: 'temperature_limit' },
       { label: 'name' },
-      { label: 'uuid' }
+      { label: 'uuid' },
+      { label: 'id' }
     ]
     private downloadLoading = false
 
