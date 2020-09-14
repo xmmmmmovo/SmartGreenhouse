@@ -4,7 +4,6 @@ from flask_loguru import logger
 
 def get_sensor_pagination(page, size, ordered, where_sql, *args):
     logger.info('get_sensor_pagination')
-    logger.info(f"SELECT * FROM sensor_data {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s".format(*args, size, (page - 1) * size))
     return MysqlOp().select_all(f"SELECT * FROM sensor_data {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
                                 (*args, size, (page - 1) * size))
 

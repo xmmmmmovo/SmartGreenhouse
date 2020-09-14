@@ -95,7 +95,7 @@
         label="温度"
       >
         <template slot-scope="{row}">
-          {{ row.temperature }}
+          {{ row.temperature + '℃' }}
         </template>
       </el-table-column>
 
@@ -103,7 +103,7 @@
         label="湿度"
       >
         <template slot-scope="{row}">
-          {{ row.humidity }}
+          {{ row.humidity + '%' }}
         </template>
       </el-table-column>
       <el-table-column

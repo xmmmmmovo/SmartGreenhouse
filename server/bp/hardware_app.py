@@ -68,21 +68,24 @@ def get_hardware_client_id():
     query = request.args.get('query', '')
 
     if 'admin' in roles:
+        where_sql = ''
+        args = []
         if query != '':
-            hardware_list = get_hardware_pagination(page, size, ordered, f'WHERE `{ordered[1:]}` LIKE %s', f'%{query}%')
-        else:
-            hardware_list = get_hardware_pagination(page, size, ordered, '')
-        total = count_total('')
+            where_sql += f'WHERE `{ordered[1:]}` LIKE %s'
+            args.append(f'%{query}%')
+        hardware_list = get_hardware_pagination(page, size, ordered, where_sql, *args)
+        total = count_total(where_sql, *args)
     else:
+        where_sql = ''
+        args = []
         if query != '':
-            hardware_list = get_hardware_pagination_by_username(username, page, size, ordered,
-                                                                f'AND {ordered[1:]} LIKE %s', f'%{query}%')
-        else:
-            hardware_list = get_hardware_pagination_by_username(username, page, size, ordered, '')
+            where_sql += f'AND `{ordered[1:]}` LIKE %s'
+            args.append(f'%{query}%')
 
+        hardware_list = get_hardware_pagination_by_username(username, page, size, ordered, where_sql, *args)
         total = count_total(
-            'WHERE uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))',
-            username)
+            'WHERE uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))' + where_sql,
+            username, *args)
 
     res_json_data = list(map(lambda res: res[:36], filter(lambda res: res.endswith('_sensor_client'),
                                                           map(lambda res: res['clientid'], res.json()['data']))))

@@ -47,7 +47,7 @@ def sensor_get_data():
             args.append(date[1])
 
         sensor_list = get_sensor_pagination(page, size, ordered, where_sql, *args)
-        total = count_total('')
+        total = count_total(where_sql, *args)
     else:
         where_sql = ''
         args = []
@@ -61,8 +61,8 @@ def sensor_get_data():
             args.append(date[1])
         sensor_list = get_sensor_pagination_by_username(username, page, size, ordered, where_sql, *args)
         total = count_total(
-            'WHERE hardware_uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))',
-            username)
+            'WHERE hardware_uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))' + where_sql,
+            username, *args)
 
     for i in range(len(sensor_list)):
         sensor_list[i]['temperature'] = str(sensor_list[i]['temperature'])
