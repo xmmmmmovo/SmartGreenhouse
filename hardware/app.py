@@ -8,7 +8,7 @@ import time
 import os
 import requests
 from tasks import data, connect_mqtt
-from base64 import encodebytes
+from base64 import b64encode
 from datetime import datetime
 
 app = Flask(__name__)
@@ -31,7 +31,8 @@ def load_config():
         logger.info('未找到，正在从云端获取')
         now = datetime.now()
         data['uuid'] = requests.post('http://192.168.137.1:9000/hardware/code',
-                                     headers={'auth': encodebytes(f'{now.hour}/{now.minute}')}).json()['data']
+                                     headers={'auth': b64encode(
+                                         f'{now.hour}/{now.minute}'.encode(encoding='utf-8'))}).json()['data']
         if data['uuid'] is None:
             logger.error('获取失败！请检查网络或验证数据！')
         else:

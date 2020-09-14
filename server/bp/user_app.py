@@ -15,7 +15,7 @@ def register():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
 
-    if len(password) < 7:
+    if len(password) < 6:
         raise DataNotSatisfyException()
 
     if username is None or password is None:
@@ -34,7 +34,7 @@ def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
 
-    if len(password) < 7:
+    if len(password) < 6:
         raise DataNotSatisfyException()
 
     if username is None or password is None:

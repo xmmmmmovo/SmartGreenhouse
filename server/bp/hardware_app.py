@@ -4,10 +4,12 @@ from flask_jwt_extended import jwt_required
 from response import response_success
 import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid
-from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, UnAuthorizedException
+from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
+    UnAuthorizedException, DataNotSatisfyException
 from utils.jwt_utils import permission_required
 from datetime import datetime
 from flask_loguru import logger
+from base64 import b64decode
 
 hardware_bp = Blueprint('hardware_app', __name__, url_prefix='/hardware')
 
@@ -19,7 +21,8 @@ def gen_code():
         raise ContentEmptyException()
 
     now = datetime.now()
-    spa = auth.split('/')
+    spa = b64decode(auth).decode().split('/')
+
     if now.hour != int(spa[0]) or now.minute != int(spa[1]):
         raise UnAuthorizedException()
 
@@ -44,5 +47,12 @@ def get_id_by_uuid_route(uuid: str):
 @jwt_required
 @permission_required(['admin'])
 def setup_threshold():
-    username = request.json.get('username', None)
-    password = request.json.get('password', None)
+    temperature_limit = request.json.get('temperature_limit', None)
+    humidity_limit = request.json.get('humidity_limit', None)
+    huuid = request.json.get('uuid', None)
+
+    if temperature_limit is None or humidity_limit is None or huuid is None:
+        raise DataNotSatisfyException()
+
+
+
