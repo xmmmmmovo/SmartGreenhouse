@@ -119,7 +119,8 @@ export const asyncRoutes: RouteConfig[] = [
     meta: {
       title: '人员管理',
       icon: 'user',
-      affix: true
+      affix: true,
+      roles: ['admin']
     },
     children: [
       {
