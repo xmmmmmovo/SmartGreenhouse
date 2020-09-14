@@ -92,6 +92,15 @@
       </el-table-column>
 
       <el-table-column
+        label="客户端名称"
+        min-width="120px"
+      >
+        <template slot-scope="{row}">
+          {{ row.name }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
         label="温度"
       >
         <template slot-scope="{row}">
@@ -107,7 +116,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="是否存在着火现象"
+        label="是否存在火灾隐患"
         class-name="status-col"
         width="100"
       >
@@ -254,15 +263,11 @@ export default class extends Vue {
 
     private handleDownload() {
       this.downloadLoading = true
-      const tHeader = ['名称', '是否在线', 'uuid', '温度阈值', '湿度阈值']
-      const filterVal = ['name', 'up', 'uuid', 'temperature_limit', 'humidity_limit']
+      const tHeader = ['uuid', '设备名', '温度', '湿度', '是否存在火灾隐患', '是否缺少光照', '是否缺少水源', '记录时间']
+      const filterVal = ['hardware_uuid', 'name', 'temperature', 'humidity', 'is_fire', 'is_illum', 'is_dry', 'record_time']
       const data = formatJson(filterVal, this.list)
       exportJson2Excel(tHeader, data, '硬件信息')
       this.downloadLoading = false
-    }
-
-    private cc() {
-      console.log(this.timevalue)
     }
 }
 </script>

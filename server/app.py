@@ -1,5 +1,6 @@
 from flask import Flask
 
+from bp.rfid_bp import rfid_bp
 from bp.sensor_app import sensor_bp
 from response import response_success
 from time import time
@@ -20,6 +21,7 @@ app.register_blueprint(exception)
 app.register_blueprint(user_bp)
 app.register_blueprint(hardware_bp)
 app.register_blueprint(sensor_bp)
+app.register_blueprint(rfid_bp)
 
 app.config['REDIS_URL'] = config['redis']['url']
 app.config['JWT_SECRET_KEY'] = config['app']['jwt_secret_key']

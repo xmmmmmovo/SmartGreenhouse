@@ -16,4 +16,18 @@ export interface ISensorData {
   is_dry: boolean,
   is_illum: boolean,
   record_time: string
+  name: string
+}
+
+export interface IRFIDData {
+  username: string,
+  log_time: string,
+  hardware_uuid: string,
+  name: string
+}
+
+export interface IUserData {
+  id: number,
+  username: string,
+  name: string
 }

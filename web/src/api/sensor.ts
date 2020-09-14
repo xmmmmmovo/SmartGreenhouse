@@ -9,7 +9,8 @@ export const defaultSensorData: ISensorData = {
   is_fire: false,
   is_dry: false,
   is_illum: false,
-  record_time: ''
+  record_time: '',
+  name: ''
 }
 
 export const getSensorData = (params: any) =>

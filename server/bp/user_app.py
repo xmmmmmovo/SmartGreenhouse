@@ -1,6 +1,9 @@
 from flask import Blueprint, request
+
+from db.user_dao import get_user_pagination, count_total
 from exception.custom_exceptions import ContentEmptyException, DBException, DataNotFoundException, \
     PasswordErrorException, DataNotSatisfyException, UnAuthorizedException
+from model.Pagination import Pagination
 from response import response_success
 from db import user_dao
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_claims
@@ -101,3 +104,22 @@ def logout():
 @jwt_required
 def protected():
     return response_success('success', 'success')
+
+
+@user_bp.route('/get_data', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def sensor_get_data():
+    page = int(request.args.get('page', 1))
+    size = int(request.args.get('size', 9999))
+    query = request.args.get('query', '')
+
+    where_sql = ''
+    args = []
+    if query != '':
+        where_sql += f'WHERE `username` LIKE %s'
+        args.append(f'%{query}%')
+
+    user_list = get_user_pagination(page, size, where_sql, *args)
+    total = count_total(where_sql, *args)
+    return response_success('success', Pagination(page, size, user_list, total['len']))

@@ -23,3 +23,17 @@ def select_roles_by_userid(user_id):
 def update_password_by_username(username: str, password: str):
     mp = MysqlOp()
     return mp.op_sql('UPDATE user SET password = %s WHERE username = %s', (user.hash_pwd(password), username))
+
+
+def get_user_pagination(page, size, where_sql, *args):
+    logger.info('get_sensor_pagination')
+    return MysqlOp().select_all(
+        f"SELECT `user`.id, username, role.`name` FROM `user` "
+        f"LEFT JOIN user_roles ON `user`.id = user_roles.user_id "
+        f"LEFT JOIN role ON user_roles.role_id = role.id"
+        f"{where_sql} LIMIT %s OFFSET %s",
+        (*args, size, (page - 1) * size))
+
+
+def count_total(where_sql, *args):
+    return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from `user` {where_sql}', (*args,))
