@@ -1,4 +1,6 @@
 from flask import Flask
+
+from bp.sensor_app import sensor_bp
 from response import response_success
 from time import time
 from flask_loguru import Logger
@@ -17,6 +19,7 @@ app = Flask(__name__)
 app.register_blueprint(exception)
 app.register_blueprint(user_bp)
 app.register_blueprint(hardware_bp)
+app.register_blueprint(sensor_bp)
 
 app.config['REDIS_URL'] = config['redis']['url']
 app.config['JWT_SECRET_KEY'] = config['app']['jwt_secret_key']

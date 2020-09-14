@@ -8,7 +8,6 @@ from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by
     get_hardware_pagination_by_username, count_total, update_hardware_by_id, delete_hardware_by_id
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException
-from utils.decimal_utils import DecimalEncoder
 from utils.jwt_utils import permission_required
 from datetime import datetime
 from flask_loguru import logger
