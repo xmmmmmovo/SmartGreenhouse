@@ -68,7 +68,7 @@
         width="80"
       >
         <template slot-scope="{$index}">
-          <span>{{ $index + 1 }}</span>
+          <span>{{ (listQuery.ordered[0] === '+') ? $index + 1 : total - $index }}</span>
         </template>
       </el-table-column>
 

@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 import json
 from db.hardware_dao import insert_sensor_data, insert_rfid_log
 from config import config
+from re import match
 
 sensor_data_topic = 'sensor_data'
 rfid_topic = 'rfid_log'
@@ -29,7 +30,7 @@ def handle_mqtt_message(client, userdata, message):
                            data['solid'])
     elif message.topic == rfid_topic:
         data = json.loads(message.payload)
-        insert_rfid_log(data['text'], data['uuid'])
+        insert_rfid_log(match(r'(\d+)', data['text']).group(1), data['uuid'])
 
 
 def connect_mqtt():

@@ -46,8 +46,6 @@ def load_config():
             f = open('./c.json', 'w', encoding='utf-8')
             f.write(dumps({'uuid': data['uuid'], 'temperature_limit': 35.00, 'humidity_limit': 50.00}))
             f.close()
-        data['temperature_limit'] = j['temperature_limit']
-        data['humidity_limit'] = j['humidity_limit']
         logger.info('读取成功')
         f.close()
     else:
@@ -95,7 +93,7 @@ def RFID_tasks():
             id, text = reader.read()
             data['id'] = id
             data['text'] = text
-            mqtt_client.publish(rfid_topic, data)
+            mqtt_client.publish(rfid_topic, dumps(data))
             logger.info(f'push data {data}')
         finally:
             GPIO.cleanup()

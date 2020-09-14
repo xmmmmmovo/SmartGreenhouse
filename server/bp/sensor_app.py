@@ -12,3 +12,4 @@ from flask_loguru import logger
 from config import config
 
 sensor_bp = Blueprint('sensor_app', __name__, url_prefix='/sensor')
+
