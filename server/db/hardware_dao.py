@@ -33,6 +33,7 @@ def update_threshold_by_uuid(uuid, temperature_limit, humidity_limit):
 
 def get_hardware_pagination(page, size, ordered, where_sql, *args):
     logger.info('get_hardware_pagination')
+    logger.info(f"SELECT * FROM hardware {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s")
     return MysqlOp().select_all(f"SELECT * FROM hardware {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
                                 (*args, size, (page - 1) * size))
 

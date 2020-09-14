@@ -87,12 +87,25 @@ def get_hardware_client_id():
     page = int(request.args.get('page', 1))
     size = int(request.args.get('size', 9999))
     ordered = request.args.get('ordered', '+id')
+    query = request.args.get('query', '')
+
+    logger.info(query)
+    logger.info(ordered[1:])
 
     if 'admin' in roles:
-        hardware_list = get_hardware_pagination(page, size, ordered, '')
+        if query != '':
+            hardware_list = get_hardware_pagination(page, size, ordered, f'WHERE `{ordered[1:]}` LIKE %s', f'%{query}%')
+        else:
+            hardware_list = get_hardware_pagination(page, size, ordered, '')
         total = count_total('')
+        logger.info(hardware_list)
     else:
-        hardware_list = get_hardware_pagination_by_username(username, page, size, ordered, '')
+        if query != '':
+            hardware_list = get_hardware_pagination_by_username(username, page, size, ordered,
+                                                                f'AND {ordered[1:]} LIKE %s', f'%{query}%')
+        else:
+            hardware_list = get_hardware_pagination_by_username(username, page, size, ordered, '')
+
         total = count_total(
             'WHERE uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))',
             username)

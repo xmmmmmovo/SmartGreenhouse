@@ -222,13 +222,13 @@ export default class extends Vue {
     private listQuery = {
       page: 1,
       size: 20,
-      ordered: '+id',
+      ordered: '+',
       query: '',
       type: 'id'
     }
     private sortOptions = [
-      { label: 'Ascending', key: '+' + this.listQuery.type },
-      { label: 'Descending', key: '-' + this.listQuery.type }
+      { label: 'Ascending', key: '+' },
+      { label: 'Descending', key: '-' }
     ]
     private typeOptions = [
       { label: 'humidity_limit' },
@@ -257,6 +257,7 @@ export default class extends Vue {
     }
 
     private async getList() {
+      this.listQuery.ordered = this.listQuery.ordered[0] + this.listQuery.type
       this.listLoading = true
       const { data } = await getHardwareList(this.listQuery)
       this.list = data.list
