@@ -93,7 +93,7 @@ def change_password():
 @user_bp.route("/logout", methods=['DELETE'])
 @jwt_required
 def logout():
-    # TODO: 为了安全考虑的redis退出登录
+    # TODO: 为了安全考虑的redis退出登录 但是为了api易于测试暂时不写
     return response_success('success logout', None)
 
 

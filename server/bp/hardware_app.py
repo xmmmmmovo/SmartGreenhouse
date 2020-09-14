@@ -108,4 +108,4 @@ def get_hardware_client_id():
         hardware_list[i]['temperature_limit'] = float(hardware_list[i]['temperature_limit'])
         hardware_list[i]['humidity_limit'] = float(hardware_list[i]['humidity_limit'])
 
-    return response_success('success', Pagination(page, size, hardware_list, total))
+    return response_success('success', Pagination(page, size, hardware_list, total['len']))
