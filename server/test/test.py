@@ -1,2 +1,4 @@
-print(int(False))
-print(int(True))
+a = [1, 2]
+b = []
+a.append(b)
+print(a)

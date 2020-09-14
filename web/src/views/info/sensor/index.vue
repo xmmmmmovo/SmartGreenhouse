@@ -38,6 +38,7 @@
         v-model="listQuery.date"
         type="datetimerange"
         :picker-options="pickerOptions"
+        value-format="yyyy-MM-dd HH:mm:ss"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
@@ -82,47 +83,69 @@
       </el-table-column>
 
       <el-table-column
-        label="名称"
-        min-width="65px"
-      >
-        <template slot-scope="{row}">
-          {{ row.name }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
         label="uuid"
         min-width="120px"
       >
         <template slot-scope="{row}">
-          {{ row.uuid }}
+          {{ row.hardware_uuid }}
         </template>
       </el-table-column>
 
       <el-table-column
-        label="温度阈值"
+        label="温度"
       >
         <template slot-scope="{row}">
-          {{ row.temperature_limit }}
+          {{ row.temperature }}
         </template>
       </el-table-column>
 
       <el-table-column
-        label="湿度阈值"
+        label="湿度"
       >
         <template slot-scope="{row}">
-          {{ row.humidity_limit }}
+          {{ row.humidity }}
         </template>
       </el-table-column>
       <el-table-column
-        label="是否在线"
+        label="是否存在着火现象"
         class-name="status-col"
         width="100"
       >
         <template slot-scope="{row}">
-          <el-tag :type="row.up ? 'success' : 'info'">
-            {{ row.up ? '在线': '已下线' }}
+          <el-tag :type="row.is_fire ? 'danger' : 'info'">
+            {{ row.is_fire ? '火灾危险': '未发生' }}
           </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="是否缺水"
+        class-name="status-col"
+        width="100"
+      >
+        <template slot-scope="{row}">
+          <el-tag :type="row.is_dry ? 'danger' : 'info'">
+            {{ row.is_dry ? '干枯危险': '未发生' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="是否缺少光照"
+        class-name="status-col"
+        width="100"
+      >
+        <template slot-scope="{row}">
+          <el-tag :type="row.is_illum ? 'danger' : 'info'">
+            {{ row.is_illum ? '光照警告': '未发生' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="记录时间"
+        class-name="status-col"
+        width="100"
+      >
+        <template slot-scope="{row}">
+          {{ row.record_time }}
         </template>
       </el-table-column>
     </el-table>
@@ -144,8 +167,8 @@ import { cloneDeep } from 'lodash'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
-import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
 import { ISensorData } from '@/api/types'
+import { getSensorData } from '@/api/sensor'
 
   @Component({
     name: 'SensorTable',
@@ -216,7 +239,7 @@ export default class extends Vue {
     private async getList() {
       this.listQuery.ordered = this.listQuery.ordered[0] + this.listQuery.type
       this.listLoading = true
-      const { data } = await getHardwareList(this.listQuery)
+      const { data } = await getSensorData(this.listQuery)
       this.list = data.list
       this.total = data.total
       console.log(this.list)

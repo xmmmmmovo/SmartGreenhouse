@@ -28,23 +28,45 @@ def sensor_get_data():
     size = int(request.args.get('size', 9999))
     ordered = request.args.get('ordered', '+id')
     query = request.args.get('query', '')
-    date = request.args.get('date', [])
+    date = request.args.getlist('date[]')
 
     if 'admin' in roles:
+        where_sql = ''
+        args = []
         if query != '':
-            sensor_list = get_sensor_pagination(page, size, ordered, f'WHERE `{ordered[1:]}` LIKE %s', f'%{query}%')
-        else:
-            sensor_list = get_sensor_pagination(page, size, ordered, '')
+            where_sql += f'WHERE `{ordered[1:]}` LIKE %s'
+            args.append(f'%{query}%')
+
+        if len(date) != 0:
+            if len(where_sql) == 0:
+                where_sql += 'WHERE '
+            else:
+                where_sql += ' AND '
+            where_sql += 'record_time > %s AND record_time < %s'
+            args.append(date[0])
+            args.append(date[1])
+
+        sensor_list = get_sensor_pagination(page, size, ordered, where_sql, *args)
         total = count_total('')
     else:
+        where_sql = ''
+        args = []
         if query != '':
-            sensor_list = get_sensor_pagination_by_username(username, page, size, ordered,
-                                                            f'AND {ordered[1:]} LIKE %s', f'%{query}%')
-        else:
-            sensor_list = get_sensor_pagination_by_username(username, page, size, ordered, '')
+            where_sql += f'AND `{ordered[1:]}` LIKE %s'
+            args.append(f'%{query}%')
 
+        if len(date) != 0:
+            where_sql += ' AND record_time > %s AND record_time < %s'
+            args.append(date[0])
+            args.append(date[1])
+        sensor_list = get_sensor_pagination_by_username(username, page, size, ordered, where_sql, *args)
         total = count_total(
             'WHERE hardware_uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))',
             username)
 
-    return response_success('success', Pagination(page, size, sensor_list, total['len'])
+    for i in range(len(sensor_list)):
+        sensor_list[i]['temperature'] = str(sensor_list[i]['temperature'])
+        sensor_list[i]['humidity'] = str(sensor_list[i]['humidity'])
+        sensor_list[i]['record_time'] = sensor_list[i]['record_time'].strftime("%m/%d/%Y, %H:%M:%S")
+
+    return response_success('success', Pagination(page, size, sensor_list, total['len']))
