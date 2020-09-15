@@ -28,10 +28,10 @@
       <el-button
         class="filter-item"
         type="primary"
-        icon="el-icon-user"
+        icon="el-icon-plus"
         @click="handleCreate"
       >
-        添加用户
+        添加权限
       </el-button>
     </div>
 
@@ -51,15 +51,6 @@
       >
         <template slot-scope="{$index}">
           <span>{{ $index + 1 }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="用户名"
-        min-width="65px"
-      >
-        <template slot-scope="{row}">
-          {{ row.username }}
         </template>
       </el-table-column>
 
@@ -86,7 +77,6 @@
             {{ '编辑' }}
           </el-button>
           <el-button
-            v-show="!row.up"
             size="mini"
             type="danger"
             @click="handleDelete(row, $index)"
@@ -112,22 +102,16 @@
       <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempUserData"
+        :model="tempRoleData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item
-          label="用户名"
+          label="权限名"
           prop="name"
         >
-          <el-input v-model="tempUserData.username" />
-        </el-form-item>
-        <el-form-item
-          label="权限"
-          prop="roles"
-        >
-          aaa
+          <el-input v-model="tempRoleData.name" />
         </el-form-item>
       </el-form>
       <div
@@ -156,9 +140,17 @@ import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
-import { IHardwareData, IUserData } from '@/api/types'
+import { IHardwareData, IRoleData, IUserData } from '@/api/types'
 import { UserModule } from '@/store/modules/user'
-import { defaultUserData, getUserData } from '@/api/user'
+import {
+  createRole,
+  defaultRoleData,
+  defaultUserData,
+  deleteRole,
+  getRolesData,
+  getUserData,
+  updateRole
+} from '@/api/user'
 
   @Component({
     name: 'UserTable',
@@ -168,7 +160,7 @@ import { defaultUserData, getUserData } from '@/api/user'
   })
 export default class extends Vue {
     private total = 0
-    private list: IUserData[] = []
+    private list: IRoleData[] = []
     private listLoading = true
     private listQuery = {
       page: 1,
@@ -189,9 +181,7 @@ export default class extends Vue {
       create: 'Create'
     }
     private dialogFormVisible = false
-    private tempUserData = defaultUserData
-
-    private roleName = ''
+    private tempRoleData = defaultRoleData
 
     created() {
       this.getList()
@@ -199,15 +189,15 @@ export default class extends Vue {
 
     private async getList() {
       this.listLoading = true
-      const { data } = await getUserData(this.listQuery)
+      const { data } = await getRolesData(this.listQuery)
+      console.log(this.list)
       this.list = data.list
       this.total = data.total
-      console.log(this.list)
       this.listLoading = false
     }
 
     private handleUpdate(row: any) {
-      this.tempHardwareData = Object.assign({}, row)
+      this.tempRoleData = Object.assign({}, row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -222,7 +212,7 @@ export default class extends Vue {
     }
 
     private resetTempUserData() {
-      this.tempUserData = cloneDeep(defaultUserData)
+      this.tempRoleData = cloneDeep(defaultRoleData)
     }
 
     private handleCreate() {
@@ -237,8 +227,8 @@ export default class extends Vue {
     private createData() {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
-          const userData = this.tempUserData
-          const { data } = await createArticle({ article: articleData })
+          const tempRoleData = this.tempRoleData
+          const { data } = await createRole(tempRoleData)
           data.article.timestamp = Date.parse(data.article.timestamp)
           this.list.unshift(data.article)
           this.dialogFormVisible = false
@@ -255,8 +245,8 @@ export default class extends Vue {
     private updateData() {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.tempHardwareData)
-          const { data } = await updateHardwareData(tempData.id, tempData)
+          const tempData = Object.assign({}, this.tempRoleData)
+          const { data } = await updateRole(tempData.id, tempData)
           console.log(data)
           const index = this.list.findIndex(v => v.id === data.id)
           this.list.splice(index, 1, data)
@@ -277,8 +267,8 @@ export default class extends Vue {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async() => {
-        const tempData = Object.assign({}, this.tempHardwareData)
-        await deleteHardwareData(tempData.id, { 'up': tempData.up })
+        const tempData = Object.assign({}, this.tempRoleData)
+        await deleteRole(tempData.id)
         this.$notify({
           title: '成功',
           message: '成功删除',

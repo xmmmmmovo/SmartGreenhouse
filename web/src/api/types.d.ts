@@ -31,3 +31,8 @@ export interface IUserData {
   username: string,
   name: string
 }
+
+export interface IRoleData {
+  id: number,
+  name: string
+}

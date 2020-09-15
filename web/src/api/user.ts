@@ -1,9 +1,14 @@
-import { IUserData } from '@/api/types'
+import { IRoleData, IUserData } from '@/api/types'
 import request from '@/utils/request'
 
 export const defaultUserData: IUserData = {
   id: 0,
   username: '',
+  name: ''
+}
+
+export const defaultRoleData: IRoleData = {
+  id: 0,
   name: ''
 }
 
@@ -14,10 +19,26 @@ export const getUserData = (params: any) =>
     params
   })
 
-export const getRolesData = () =>
+export const getRolesData = (params: any) =>
   request({
     url: '/user/roles',
-    method: 'get'
+    method: 'get',
+    params
+  })
+
+export const createRole = (data: any) =>
+  request({
+
+  })
+
+export const updateRole = (id:number, data: any) =>
+  request({
+
+  })
+
+export const deleteRole = (id:number) =>
+  request({
+
   })
 
 export const deleteUserData = (id: number) =>

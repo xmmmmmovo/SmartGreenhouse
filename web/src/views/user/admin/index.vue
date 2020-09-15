@@ -196,11 +196,8 @@ export default class extends Vue {
     private dialogFormVisible = false
     private tempUserData = defaultUserData
 
-    private roleName = ''
-
     created() {
       this.getList()
-      this.getRoleList()
     }
 
     private async getList() {
@@ -209,14 +206,6 @@ export default class extends Vue {
       this.list = data.list
       this.total = data.total
       console.log(this.list)
-      this.listLoading = false
-    }
-
-    private async getRoleList() {
-      this.listLoading = true
-      const { data } = await getRolesData()
-      this.roleData = data
-      console.log(this.roleData)
       this.listLoading = false
     }
 

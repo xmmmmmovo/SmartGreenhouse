@@ -39,12 +39,17 @@ def count_total(where_sql, *args):
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from `user` {where_sql}', (*args,))
 
 
+def count_total_role(where_sql, *args):
+    return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from role {where_sql}', (*args,))
+
+
 def add_role(name):
     return MysqlOp().op_sql('INSERT INTO role (`name`) VALUES (%s)', (name))
 
 
-def select_roles():
-    return MysqlOp().select_all('SELECT `name` FROM role')
+def get_role_pagination(page, size, where_sql, *args):
+    return MysqlOp().select_all(f'SELECT * FROM role {where_sql} LIMIT %s OFFSET %s',
+                                (*args, size, (page - 1) * size))
 
 
 def delete_user_by_id(id):

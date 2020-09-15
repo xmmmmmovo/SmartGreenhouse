@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from db.user_dao import get_user_pagination, count_total
+from db.user_dao import get_user_pagination, count_total, count_total_role
 from exception.custom_exceptions import ContentEmptyException, DBException, DataNotFoundException, \
     PasswordErrorException, DataNotSatisfyException, UnAuthorizedException
 from model.Pagination import Pagination
@@ -142,7 +142,19 @@ def add_role():
 @jwt_required
 @permission_required(['admin'])
 def get_roles_list():
-    return response_success('success', list(map(lambda x: x['name'], user_dao.select_roles())))
+    page = int(request.args.get('page', 1))
+    size = int(request.args.get('size', 9999))
+    query = request.args.get('query', '')
+
+    where_sql = ''
+    args = []
+    if query != '':
+        where_sql += f'WHERE `username` LIKE %s'
+        args.append(f'%{query}%')
+
+    role_list = get_user_pagination(page, size, where_sql, *args)
+    total = count_total_role(where_sql, *args)
+    return response_success('success', Pagination(page, size, role_list, total['len']))
 
 
 @user_bp.route('/user/<int:id>', methods=['DELETE'])
