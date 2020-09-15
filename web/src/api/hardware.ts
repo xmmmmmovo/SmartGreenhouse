@@ -11,7 +11,7 @@ export const defaultHardwareData: IHardwareData = {
 }
 
 export const defaultDistributeData:IDistributeData = {
-  id: 0,
+  id: '',
   name: '',
   uuid: '',
   username: ''
@@ -47,7 +47,7 @@ export const getDistributeData = (params: any) =>
 
 export const deleteDistributeData = (id: number) =>
   request({
-    url: ``,
+    url: `hardware/user_hardware/${id}`,
     method: 'delete'
   })
 
@@ -55,4 +55,18 @@ export const getAllHardware = () =>
   request({
     url: '/hardware/hardware/all',
     method: 'get'
+  })
+
+export const createDistributeData = (data: any) =>
+  request({
+    url: '/hardware/user_hardware/add_user_hardware',
+    method: 'post',
+    data
+  })
+
+export const updateDistributeData = (data: any) =>
+  request({
+    url: '/hardware/user_hardware',
+    method: 'put',
+    data
   })

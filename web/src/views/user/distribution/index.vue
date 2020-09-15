@@ -1,21 +1,36 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
-        v-model="listQuery.query"
-        placeholder="关键词"
-        style="width: 200px;"
+      <el-select
+        v-model="listQuery.userId"
+        style="width: 140px"
         class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
+        filterable
+        clearable
+        @change="handleFilter"
       >
-        搜索
-      </el-button>
+        <el-option
+          v-for="item in userList"
+          :key="item.id"
+          :label="item.username"
+          :value="item.id"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.hardwareuuid"
+        style="width: 140px"
+        class="filter-item"
+        filterable
+        clearable
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in hardwareList"
+          :key="item.uuid"
+          :label="item.name"
+          :value="item.uuid"
+        />
+      </el-select>
       <el-button
         :loading="downloadLoading"
         class="filter-item"
@@ -122,10 +137,42 @@
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item
-          label="权限名"
-          prop="name"
+          label="用户名"
+          prop="id"
         >
-          <el-input v-model="tempDistributeData.name" />
+          <el-select
+            v-model="tempDistributeData.id"
+            style="width: 140px"
+            class="filter-item"
+            filterable
+            clearable
+          >
+            <el-option
+              v-for="item in userList"
+              :key="item.id"
+              :label="item.username"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="设备名"
+          prop="uuid"
+        >
+          <el-select
+            v-model="tempDistributeData.uuid"
+            style="width: 140px"
+            class="filter-item"
+            filterable
+            clearable
+          >
+            <el-option
+              v-for="item in hardwareList"
+              :key="item.uuid"
+              :label="item.name"
+              :value="item.uuid"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div
@@ -164,7 +211,13 @@ import {
   getUserData,
   updateRole
 } from '@/api/user'
-import { defaultDistributeData, deleteDistributeData, getAllHardware, getDistributeData } from '@/api/hardware'
+import {
+  createDistributeData,
+  defaultDistributeData,
+  deleteDistributeData,
+  getAllHardware,
+  getDistributeData, updateDistributeData
+} from '@/api/hardware'
 
   @Component({
     name: 'DistributeTable',
@@ -181,14 +234,15 @@ export default class extends Vue {
     private listQuery = {
       page: 1,
       size: 20,
-      query: ''
+      userId: '',
+      hardwareuuid: ''
     }
     private downloadLoading = false
     private isAdmin = UserModule.roles.includes('admin')
 
     private rules = {
-      name: [{ required: true, message: 'name is required', trigger: 'change' }],
-      roles: [{ required: true, message: 'roles is required', trigger: 'change' }]
+      id: [{ required: true, message: 'id is required', trigger: 'change' }],
+      uuid: [{ required: true, message: 'uuid is required', trigger: 'change' }]
     }
 
     private dialogStatus = ''
@@ -262,8 +316,8 @@ export default class extends Vue {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
           const tempRoleData = this.tempDistributeData
-          const { data } = await createRole(tempRoleData)
-          this.list.unshift(data)
+          const { data } = await createDistributeData(tempRoleData)
+          await this.getList()
           this.dialogFormVisible = false
           this.$notify({
             title: '成功',
@@ -279,10 +333,10 @@ export default class extends Vue {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.tempDistributeData)
-          const { data } = await updateRole(tempData.id, tempData)
+          console.log(tempData)
+          const { data } = await updateDistributeData(tempData)
           console.log(data)
-          const index = this.list.findIndex(v => v.id === data.id)
-          this.list.splice(index, 1, data)
+          await this.getList()
           this.dialogFormVisible = false
           this.$notify({
             title: '成功',
@@ -300,7 +354,8 @@ export default class extends Vue {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async() => {
-        const tempData = Object.assign({}, this.tempDistributeData)
+        const tempData = Object.assign({}, row)
+        console.log(tempData)
         await deleteDistributeData(tempData.id)
         this.$notify({
           title: '成功',

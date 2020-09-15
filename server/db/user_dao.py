@@ -26,7 +26,9 @@ def update_password_by_username(username: str, password: str):
 
 
 def get_all_users():
-    return MysqlOp().select_all('SELECT `id`, username from `user`')
+    return MysqlOp().select_all("SELECT `id`, username from `user` WHERE id NOT IN "
+                                "(SELECT user_roles.user_id FROM user_roles WHERE user_roles.role_id IN "
+                                "(SELECT id FROM role WHERE role.`name` = 'admin'))")
 
 
 def get_user_pagination(page, size, where_sql, *args):
@@ -66,7 +68,8 @@ def count_total_role(where_sql, *args):
 
 
 def add_role(name):
-    return MysqlOp().op_sql('INSERT INTO role (`name`) VALUES (%s)', (name))
+    mp = MysqlOp()
+    return mp.op_sql('INSERT INTO role (`name`) VALUES (%s)', (name)), mp.cur.lastrowid
 
 
 def get_role_pagination(page, size, where_sql, *args):
@@ -84,3 +87,4 @@ def delete_role_by_id(id):
 
 def update_role_by_id(id, name):
     return MysqlOp().op_sql('UPDATE role SET name = %s WHERE id = %s', (name, id))
+

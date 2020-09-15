@@ -6,7 +6,8 @@ from response import response_success
 import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid, get_hardware_pagination, \
     get_hardware_pagination_by_username, count_total, update_hardware_by_id, delete_hardware_by_id, \
-    get_all_hardware_list, get_user_hardware_pagination, count_total_user_hardware
+    get_all_hardware_list, get_user_hardware_pagination, count_total_user_hardware, delete_user_hardware_by_user_id, \
+    insert_user_hardware_data, update_user_hardware_data
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException
 from utils.jwt_utils import permission_required
@@ -137,7 +138,7 @@ def delete_hardware(id):
     is_succ = delete_hardware_by_id(id)
     if not is_succ:
         raise DBException()
-    return response_success('success', 'success')
+    return response_success('success', None)
 
 
 @hardware_bp.route('/hardware/all', methods=['GET'])
@@ -153,14 +154,65 @@ def update_user():
 def get_user_hardware():
     page = int(request.args.get('page', 1))
     size = int(request.args.get('size', 9999))
-    ordered = request.args.get('ordered', '+id')
-    query = request.args.get('query', '')
+    user_id = request.args.get('userId', '')
+    hardware_uuid = request.args.get('hardwareuuid', '')
 
     where_sql = ''
     args = []
-    if query != '':
-        where_sql += f'WHERE `{ordered[1:]}` LIKE %s'
-        args.append(f'%{query}%')
-    user_hardware_list = get_user_hardware_pagination(page, size, ordered, where_sql, *args)
+    if user_id != '':
+        where_sql += f'WHERE `user`.id = %s'
+        args.append(user_id)
+    if hardware_uuid != '':
+        if len(where_sql) == 0:
+            where_sql += f'WHERE hardware.uuid = %s'
+        else:
+            where_sql += ' AND hardware.uuid = %s'
+        args.append(hardware_uuid)
+    user_hardware_list = get_user_hardware_pagination(page, size, where_sql, *args)
     total = count_total_user_hardware(where_sql, *args)
     return response_success('success', Pagination(page, size, user_hardware_list, total['len']))
+
+
+@hardware_bp.route('/user_hardware/<int:id>', methods=['DELETE'])
+@jwt_required
+@permission_required(['admin'])
+def delete_user_hardware(id):
+    is_succ = delete_user_hardware_by_user_id(id)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)
+
+
+@hardware_bp.route('/user_hardware/add_user_hardware', methods=['POST'])
+@jwt_required
+@permission_required(['admin'])
+def insert_user_hardware():
+    id = request.json.get('id', None)
+    uuidd = request.json.get('uuid', None)
+
+    if id is None or uuidd is None:
+        raise ContentEmptyException()
+
+    is_succ = insert_user_hardware_data(id, uuidd)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)
+
+
+@hardware_bp.route('/user_hardware', methods=['PUT'])
+@jwt_required
+@permission_required(['admin'])
+def update_user_hardware():
+    id = request.json.get('id', None)
+    uuidd = request.json.get('uuid', None)
+
+    logger.info(id)
+    logger.info(uuidd)
+
+    if id is None or uuidd is None:
+        raise ContentEmptyException()
+
+    is_succ = update_user_hardware_data(id, uuidd)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)

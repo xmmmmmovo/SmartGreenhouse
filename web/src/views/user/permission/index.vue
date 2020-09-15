@@ -265,7 +265,7 @@ export default class extends Vue {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async() => {
-        const tempData = Object.assign({}, this.tempRoleData)
+        const tempData = Object.assign({}, row)
         await deleteRole(tempData.id)
         this.$notify({
           title: '成功',

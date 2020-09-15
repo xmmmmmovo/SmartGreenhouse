@@ -169,10 +169,10 @@ def add_role():
     name = request.json.get('name', None)
     if name is None:
         raise ContentEmptyException()
-    is_succ = user_dao.add_role(name)
+    is_succ, id = user_dao.add_role(name)
     if not is_succ:
         raise DBException()
-    return response_success('success', None)
+    return response_success('success', {'id': id, 'name': name})
 
 
 @user_bp.route('/roles', methods=['GET'])
