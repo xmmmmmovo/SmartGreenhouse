@@ -5,7 +5,8 @@ from model.Pagination import Pagination
 from response import response_success
 import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid, get_hardware_pagination, \
-    get_hardware_pagination_by_username, count_total, update_hardware_by_id, delete_hardware_by_id
+    get_hardware_pagination_by_username, count_total, update_hardware_by_id, delete_hardware_by_id, \
+    get_all_hardware_list, get_user_hardware_pagination, count_total_user_hardware
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException
 from utils.jwt_utils import permission_required
@@ -137,3 +138,29 @@ def delete_hardware(id):
     if not is_succ:
         raise DBException()
     return response_success('success', 'success')
+
+
+@hardware_bp.route('/hardware/all', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def update_user():
+    return response_success('success', get_all_hardware_list())
+
+
+@hardware_bp.route('/user_hardware/all', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def get_user_hardware():
+    page = int(request.args.get('page', 1))
+    size = int(request.args.get('size', 9999))
+    ordered = request.args.get('ordered', '+id')
+    query = request.args.get('query', '')
+
+    where_sql = ''
+    args = []
+    if query != '':
+        where_sql += f'WHERE `{ordered[1:]}` LIKE %s'
+        args.append(f'%{query}%')
+    user_hardware_list = get_user_hardware_pagination(page, size, ordered, where_sql, *args)
+    total = count_total_user_hardware(where_sql, *args)
+    return response_success('success', Pagination(page, size, user_hardware_list, total['len']))

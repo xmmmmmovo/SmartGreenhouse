@@ -25,7 +25,7 @@ def handle_mqtt_message(client, userdata, message):
     logger.info(f'topic: {message.topic}, message: {message.payload.decode()}')
     if message.topic == sensor_data_topic:
         data = json.loads(message.payload)
-        insert_sensor_data(data['humidity'], data['temperature'], data['uuid'], data['fire'],
+        insert_sensor_data(data['temperature'], data['humidity'], data['uuid'], data['fire'],
                            data['illumination'],
                            data['solid'])
     elif message.topic == rfid_topic:

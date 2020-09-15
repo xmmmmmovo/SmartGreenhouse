@@ -36,3 +36,11 @@ export interface IRoleData {
   id: number,
   name: string
 }
+
+// 名查询 uuid查询
+export interface IDistributeData {
+  id: number,
+  name: string,
+  uuid: string,
+  username: string
+}

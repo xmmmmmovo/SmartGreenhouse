@@ -25,6 +25,10 @@ def update_password_by_username(username: str, password: str):
     return mp.op_sql('UPDATE user SET password = %s WHERE username = %s', (user.hash_pwd(password), username))
 
 
+def get_all_users():
+    return MysqlOp().select_all('SELECT `id`, username from `user`')
+
+
 def get_user_pagination(page, size, where_sql, *args):
     logger.info('get_sensor_pagination')
     return MysqlOp().select_all(
@@ -68,6 +72,10 @@ def add_role(name):
 def get_role_pagination(page, size, where_sql, *args):
     return MysqlOp().select_all(f'SELECT * FROM role {where_sql} LIMIT %s OFFSET %s',
                                 (*args, size, (page - 1) * size))
+
+
+def get_all_role():
+    return MysqlOp().select_all(f'SELECT `name` FROM role')
 
 
 def delete_role_by_id(id):

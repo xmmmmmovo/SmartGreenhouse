@@ -146,9 +146,9 @@ export const asyncRoutes: RouteConfig[] = [
         }
       },
       {
-        path: 'distribute',
+        path: 'distribution',
         component: () => import(/* webpackChunkName: "dashboard" */ '@/views/user/distribution/index.vue'),
-        name: 'Distribute',
+        name: 'Distribution',
         meta: {
           title: '人员派发',
           icon: 'distribute',

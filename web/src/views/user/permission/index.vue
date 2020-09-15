@@ -139,7 +139,6 @@ import { cloneDeep } from 'lodash'
 import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
-import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
 import { IHardwareData, IRoleData, IUserData } from '@/api/types'
 import { UserModule } from '@/store/modules/user'
 import {
@@ -151,7 +150,6 @@ import {
   getUserData,
   updateRole
 } from '@/api/user'
-import da from "element-ui/src/locale/lang/da";
 
   @Component({
     name: 'UserTable',

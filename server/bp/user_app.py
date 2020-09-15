@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 
-from db.user_dao import get_user_pagination, count_total, count_total_role, get_role_pagination
+from db.user_dao import get_user_pagination, count_total, count_total_role, get_role_pagination, get_all_users, \
+    get_all_role
 from exception.custom_exceptions import ContentEmptyException, DBException, DataNotFoundException, \
     PasswordErrorException, DataNotSatisfyException, UnAuthorizedException
 from model.Pagination import Pagination
@@ -154,6 +155,13 @@ def update_user(id):
     return response_success('success', {'id': id, 'username': username, 'name': name})
 
 
+@user_bp.route('/user/all', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def get_users_list():
+    return response_success('success', get_all_users())
+
+
 @user_bp.route('/add_role', methods=['POST'])
 @jwt_required
 @permission_required(['admin'])
@@ -184,6 +192,13 @@ def get_roles_list():
     role_list = get_role_pagination(page, size, where_sql, *args)
     total = count_total_role(where_sql, *args)
     return response_success('success', Pagination(page, size, role_list, total['len']))
+
+
+@user_bp.route('/roles/all', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def get_all_roles_list():
+    return response_success('success', list(map(lambda role: role['name'], get_all_role())))
 
 
 @user_bp.route('/roles/<int:id>', methods=['DELETE'])

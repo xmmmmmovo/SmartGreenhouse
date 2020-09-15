@@ -161,7 +161,7 @@ import Pagination from '@/components/Pagination/index.vue'
 import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
 import { IHardwareData, IUserData } from '@/api/types'
 import { UserModule } from '@/store/modules/user'
-import { defaultUserData, deleteUserData, getRolesData, getUserData, updateUserData } from '@/api/user'
+import { defaultUserData, deleteUserData, getAllRolesData, getRolesData, getUserData, updateUserData } from '@/api/user'
 
   @Component({
     name: 'UserTable',
@@ -196,8 +196,11 @@ export default class extends Vue {
     private dialogFormVisible = false
     private tempUserData = defaultUserData
 
+    private roleName = ''
+
     created() {
       this.getList()
+      this.getRoleList()
     }
 
     private async getList() {
@@ -206,6 +209,14 @@ export default class extends Vue {
       this.list = data.list
       this.total = data.total
       console.log(this.list)
+      this.listLoading = false
+    }
+
+    private async getRoleList() {
+      this.listLoading = true
+      const { data } = await getAllRolesData()
+      this.roleData = data
+      console.log(this.roleData)
       this.listLoading = false
     }
 

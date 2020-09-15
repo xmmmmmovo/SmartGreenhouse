@@ -26,6 +26,12 @@ export const getRolesData = (params: any) =>
     params
   })
 
+export const getAllRolesData = () =>
+  request({
+    url: '/user/roles/all',
+    method: 'get'
+  })
+
 export const createRole = (data: any) =>
   request({
     url: '/user/add_role',

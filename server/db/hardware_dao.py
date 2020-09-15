@@ -46,6 +46,19 @@ def get_hardware_pagination_by_username(username, page, size, ordered, where_sql
         (username, *args, size, (page - 1) * size))
 
 
+def get_user_hardware_pagination(page, size, ordered, where_sql, *args):
+    return MysqlOp().select_all(
+        f"SELECT `user`.id , hardware.`name`, hardware.uuid, `user`.username FROM user_hardware "
+        f"LEFT JOIN `user` ON `user`.id = user_hardware.user_id "
+        f"LEFT JOIN hardware ON hardware.uuid = user_hardware.hardware_uuid "
+        f"{where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
+        (*args, size, (page - 1) * size))
+
+def count_total_user_hardware(where_sql, *args):
+    logger.info('count_total_user_hardware')
+    return MysqlOp().select_one(f'SELECT COUNT(`user_id`) as len from user_hardware {where_sql}', (*args,))
+
+
 def count_total(where_sql, *args):
     logger.info('count_total')
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from hardware {where_sql}', (*args,))
@@ -61,3 +74,7 @@ def update_hardware_by_id(id, name, humidity_limit, temperature_limit):
 def delete_hardware_by_id(id):
     logger.info('delete_hardware_by_id')
     return MysqlOp().op_sql('DELETE FROM hardware WHERE id = %s', (id))
+
+
+def get_all_hardware_list():
+    return MysqlOp().select_all('SELECT * FROM hardware')
