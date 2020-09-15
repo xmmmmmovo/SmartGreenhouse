@@ -99,13 +99,6 @@
       >
         <template slot-scope="{row, $index}">
           <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-          >
-            {{ '编辑' }}
-          </el-button>
-          <el-button
             size="mini"
             type="danger"
             @click="handleDelete(row, $index)"
@@ -284,15 +277,6 @@ export default class extends Vue {
       this.listLoading = false
     }
 
-    private handleUpdate(row: any) {
-      this.tempDistributeData = Object.assign({}, row)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        (this.$refs.dataForm as Form).clearValidate()
-      })
-    }
-
     private handleFilter() {
       console.log(this.listQuery)
       this.listQuery.page = 1
@@ -322,25 +306,6 @@ export default class extends Vue {
           this.$notify({
             title: '成功',
             message: '创建成功',
-            type: 'success',
-            duration: 2000
-          })
-        }
-      })
-    }
-
-    private updateData() {
-      (this.$refs.dataForm as Form).validate(async(valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.tempDistributeData)
-          console.log(tempData)
-          const { data } = await updateDistributeData(tempData)
-          console.log(data)
-          await this.getList()
-          this.dialogFormVisible = false
-          this.$notify({
-            title: '成功',
-            message: '更新成功',
             type: 'success',
             duration: 2000
           })

@@ -7,7 +7,7 @@ import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid, get_hardware_pagination, \
     get_hardware_pagination_by_username, count_total, update_hardware_by_id, delete_hardware_by_id, \
     get_all_hardware_list, get_user_hardware_pagination, count_total_user_hardware, delete_user_hardware_by_user_id, \
-    insert_user_hardware_data, update_user_hardware_data
+    insert_user_hardware_data
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException
 from utils.jwt_utils import permission_required
@@ -194,25 +194,6 @@ def insert_user_hardware():
         raise ContentEmptyException()
 
     is_succ = insert_user_hardware_data(id, uuidd)
-    if not is_succ:
-        raise DBException()
-    return response_success('success', None)
-
-
-@hardware_bp.route('/user_hardware', methods=['PUT'])
-@jwt_required
-@permission_required(['admin'])
-def update_user_hardware():
-    id = request.json.get('id', None)
-    uuidd = request.json.get('uuid', None)
-
-    logger.info(id)
-    logger.info(uuidd)
-
-    if id is None or uuidd is None:
-        raise ContentEmptyException()
-
-    is_succ = update_user_hardware_data(id, uuidd)
     if not is_succ:
         raise DBException()
     return response_success('success', None)

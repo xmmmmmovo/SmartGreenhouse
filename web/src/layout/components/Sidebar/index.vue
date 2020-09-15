@@ -1,23 +1,29 @@
 <template>
-  <el-scrollbar wrap-class="scrollbar-wrapper">
-    <el-menu
+  <div>
+    <sidebar-logo
+      v-if="true"
       :collapse="isCollapse"
-      :background-color="variables.menuBg"
-      :text-color="variables.menuText"
-      :active-text-color="variables.menuActiveText"
-      :unique-opened="false"
-      :collapse-transition="false"
-      mode="vertical"
-    >
-      <sidebar-item
-        v-for="route in routes"
-        :key="route.path"
-        :item="route"
-        :base-path="route.path"
-        :is-collapse="isCollapse"
-      />
-    </el-menu>
-  </el-scrollbar>
+    />
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <el-menu
+        :collapse="isCollapse"
+        :background-color="variables.menuBg"
+        :text-color="variables.menuText"
+        :active-text-color="variables.menuActiveText"
+        :unique-opened="false"
+        :collapse-transition="false"
+        mode="vertical"
+      >
+        <sidebar-item
+          v-for="route in routes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+          :is-collapse="isCollapse"
+        />
+      </el-menu>
+    </el-scrollbar>
+  </div>
 </template>
 
 <script lang="ts">
@@ -26,11 +32,13 @@ import { AppModule } from '@/store/modules/app'
 import SidebarItem from './SidebarItem.vue'
 import variables from '@/styles/_variables.scss'
 import { PermissionModule } from '@/store/modules/permissions'
+import SidebarLogo from '@/layout/components/Sidebar/SidebarLogo.vue'
 
 @Component({
   name: 'SideBar',
   components: {
-    SidebarItem
+    SidebarItem,
+    SidebarLogo
   }
 })
 export default class extends Vue {

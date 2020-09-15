@@ -92,9 +92,3 @@ def delete_user_hardware_by_user_id(id):
 def insert_user_hardware_data(id, uuid):
     logger.info('insert_user_hardware')
     return MysqlOp().op_sql('INSERT INTO user_hardware (user_id, hardware_uuid) VALUES (%s, %s)', (id, uuid))
-
-
-def update_user_hardware_data(id, uuid):
-    logger.info('update_user_hardware_data')
-    return MysqlOp().op_sql('UPDATE user_hardware SET user_id = %s AND hardware_uuid = %s '
-                            'WHERE user_id = %s AND hardware_uuid = %s', (id, uuid, id, uuid))

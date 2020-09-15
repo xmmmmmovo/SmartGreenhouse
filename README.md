@@ -3,12 +3,12 @@
 
 ## 技术选型
 
-| 功能端 |                       技术描述                       |
-| :----: | :--------------------------------------------------: |
-|  安卓  |                    flutter, dart                     |
-|  前端  | vue, typescript, element-ui, vuex, vue-element-admin |
-|  后端  |         python, flask, mysql, redis, docker          |
-|  硬件  |              raspberry pi, python, emqx              |
+| 功能端 |              技术描述               |
+| :----: | :---------------------------------: |
+|  安卓  |            flutter, dart            |
+|  前端  |  vue, typescript, element-ui, vuex  |
+|  后端  | python, flask, mysql, redis, docker |
+|  硬件  |     raspberry pi, python, emqx      |
 
 
 
