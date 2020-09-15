@@ -44,3 +44,15 @@ export const getDistributeData = (params: any) =>
     method: 'get',
     params
   })
+
+export const deleteDistributeData = (id: number) =>
+  request({
+    url: ``,
+    method: 'delete'
+  })
+
+export const getAllHardware = () =>
+  request({
+    url: '/hardware/hardware/all',
+    method: 'get'
+  })

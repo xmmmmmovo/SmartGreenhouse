@@ -116,7 +116,7 @@
       <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempRoleData"
+        :model="tempDistributeData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
@@ -125,7 +125,7 @@
           label="权限名"
           prop="name"
         >
-          <el-input v-model="tempRoleData.name" />
+          <el-input v-model="tempDistributeData.name" />
         </el-form-item>
       </el-form>
       <div
@@ -159,12 +159,12 @@ import {
   createRole,
   defaultRoleData,
   defaultUserData,
-  deleteRole,
+  deleteRole, getAllUser,
   getRolesData,
   getUserData,
   updateRole
 } from '@/api/user'
-import { getDistributeData } from '@/api/hardware'
+import { defaultDistributeData, deleteDistributeData, getAllHardware, getDistributeData } from '@/api/hardware'
 
   @Component({
     name: 'DistributeTable',
@@ -175,6 +175,8 @@ import { getDistributeData } from '@/api/hardware'
 export default class extends Vue {
     private total = 0
     private list: IRoleData[] = []
+    private userList: IUserData[] = []
+    private hardwareList: IHardwareData[] = []
     private listLoading = true
     private listQuery = {
       page: 1,
@@ -195,10 +197,12 @@ export default class extends Vue {
       create: 'Create'
     }
     private dialogFormVisible = false
-    private tempRoleData = defaultRoleData
+    private tempDistributeData = defaultDistributeData
 
     created() {
       this.getList()
+      this.getUserList()
+      this.getHardwareList()
     }
 
     private async getList() {
@@ -210,8 +214,24 @@ export default class extends Vue {
       this.listLoading = false
     }
 
+    private async getUserList() {
+      this.listLoading = true
+      const { data } = await getAllUser()
+      console.log(data)
+      this.userList = data
+      this.listLoading = false
+    }
+
+    private async getHardwareList() {
+      this.listLoading = true
+      const { data } = await getAllHardware()
+      console.log(data)
+      this.hardwareList = data
+      this.listLoading = false
+    }
+
     private handleUpdate(row: any) {
-      this.tempRoleData = Object.assign({}, row)
+      this.tempDistributeData = Object.assign({}, row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -226,7 +246,7 @@ export default class extends Vue {
     }
 
     private resetTempUserData() {
-      this.tempRoleData = cloneDeep(defaultRoleData)
+      this.tempDistributeData = cloneDeep(defaultDistributeData)
     }
 
     private handleCreate() {
@@ -241,7 +261,7 @@ export default class extends Vue {
     private createData() {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
-          const tempRoleData = this.tempRoleData
+          const tempRoleData = this.tempDistributeData
           const { data } = await createRole(tempRoleData)
           this.list.unshift(data)
           this.dialogFormVisible = false
@@ -258,7 +278,7 @@ export default class extends Vue {
     private updateData() {
       (this.$refs.dataForm as Form).validate(async(valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.tempRoleData)
+          const tempData = Object.assign({}, this.tempDistributeData)
           const { data } = await updateRole(tempData.id, tempData)
           console.log(data)
           const index = this.list.findIndex(v => v.id === data.id)
@@ -280,8 +300,8 @@ export default class extends Vue {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async() => {
-        const tempData = Object.assign({}, this.tempRoleData)
-        await deleteRole(tempData.id)
+        const tempData = Object.assign({}, this.tempDistributeData)
+        await deleteDistributeData(tempData.id)
         this.$notify({
           title: '成功',
           message: '成功删除',

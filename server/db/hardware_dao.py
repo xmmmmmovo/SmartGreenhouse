@@ -77,4 +77,4 @@ def delete_hardware_by_id(id):
 
 
 def get_all_hardware_list():
-    return MysqlOp().select_all('SELECT * FROM hardware')
+    return MysqlOp().select_all('SELECT uuid, `name` FROM hardware')

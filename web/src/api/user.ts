@@ -64,3 +64,9 @@ export const updateUserData = (id: number, data: any) =>
     method: 'put',
     data
   })
+
+export const getAllUser = () =>
+  request({
+    url: '/user/user/all',
+    method: 'get'
+  })
