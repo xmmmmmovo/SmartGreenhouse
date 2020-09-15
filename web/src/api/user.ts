@@ -28,17 +28,22 @@ export const getRolesData = (params: any) =>
 
 export const createRole = (data: any) =>
   request({
-
+    url: '/user/add_role',
+    method: 'post',
+    data
   })
 
 export const updateRole = (id:number, data: any) =>
   request({
-
+    url: `user/roles/${id}`,
+    method: 'put',
+    data
   })
 
 export const deleteRole = (id:number) =>
   request({
-
+    url: `user/roles/${id}`,
+    method: 'delete'
   })
 
 export const deleteUserData = (id: number) =>

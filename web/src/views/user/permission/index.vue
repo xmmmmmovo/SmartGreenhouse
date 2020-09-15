@@ -151,6 +151,7 @@ import {
   getUserData,
   updateRole
 } from '@/api/user'
+import da from "element-ui/src/locale/lang/da";
 
   @Component({
     name: 'UserTable',
@@ -190,7 +191,7 @@ export default class extends Vue {
     private async getList() {
       this.listLoading = true
       const { data } = await getRolesData(this.listQuery)
-      console.log(this.list)
+      console.log(data)
       this.list = data.list
       this.total = data.total
       this.listLoading = false
@@ -229,8 +230,7 @@ export default class extends Vue {
         if (valid) {
           const tempRoleData = this.tempRoleData
           const { data } = await createRole(tempRoleData)
-          data.article.timestamp = Date.parse(data.article.timestamp)
-          this.list.unshift(data.article)
+          this.list.unshift(data)
           this.dialogFormVisible = false
           this.$notify({
             title: '成功',
@@ -281,10 +281,10 @@ export default class extends Vue {
 
     private handleDownload() {
       this.downloadLoading = true
-      const tHeader = ['名称', '是否在线', 'uuid', '温度阈值', '湿度阈值']
-      const filterVal = ['name', 'up', 'uuid', 'temperature_limit', 'humidity_limit']
+      const tHeader = ['id', '权限名']
+      const filterVal = ['id', 'name']
       const data = formatJson(filterVal, this.list)
-      exportJson2Excel(tHeader, data, '硬件信息')
+      exportJson2Excel(tHeader, data, '权限信息')
       this.downloadLoading = false
     }
 }

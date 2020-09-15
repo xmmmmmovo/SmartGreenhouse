@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from db.user_dao import get_user_pagination, count_total, count_total_role
+from db.user_dao import get_user_pagination, count_total, count_total_role, get_role_pagination
 from exception.custom_exceptions import ContentEmptyException, DBException, DataNotFoundException, \
     PasswordErrorException, DataNotSatisfyException, UnAuthorizedException
 from model.Pagination import Pagination
@@ -125,38 +125,6 @@ def sensor_get_data():
     return response_success('success', Pagination(page, size, user_list, total['len']))
 
 
-@user_bp.route('/add_role', methods=['POST'])
-@jwt_required
-@permission_required(['admin'])
-def add_role():
-    name = request.json.get('name', None)
-    if name is None:
-        raise ContentEmptyException()
-    is_succ = user_dao.add_role(name)
-    if not is_succ:
-        raise DBException()
-    return response_success('success', None)
-
-
-@user_bp.route('/roles', methods=['GET'])
-@jwt_required
-@permission_required(['admin'])
-def get_roles_list():
-    page = int(request.args.get('page', 1))
-    size = int(request.args.get('size', 9999))
-    query = request.args.get('query', '')
-
-    where_sql = ''
-    args = []
-    if query != '':
-        where_sql += f'WHERE `username` LIKE %s'
-        args.append(f'%{query}%')
-
-    role_list = get_user_pagination(page, size, where_sql, *args)
-    total = count_total_role(where_sql, *args)
-    return response_success('success', Pagination(page, size, role_list, total['len']))
-
-
 @user_bp.route('/user/<int:id>', methods=['DELETE'])
 @jwt_required
 @permission_required(['admin'])
@@ -184,3 +152,61 @@ def update_user(id):
         raise DBException()
 
     return response_success('success', {'id': id, 'username': username, 'name': name})
+
+
+@user_bp.route('/add_role', methods=['POST'])
+@jwt_required
+@permission_required(['admin'])
+def add_role():
+    name = request.json.get('name', None)
+    if name is None:
+        raise ContentEmptyException()
+    is_succ = user_dao.add_role(name)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)
+
+
+@user_bp.route('/roles', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def get_roles_list():
+    page = int(request.args.get('page', 1))
+    size = int(request.args.get('size', 9999))
+    query = request.args.get('query', '')
+
+    where_sql = ''
+    args = []
+    if query != '':
+        where_sql += f'WHERE `username` LIKE %s'
+        args.append(f'%{query}%')
+
+    role_list = get_role_pagination(page, size, where_sql, *args)
+    total = count_total_role(where_sql, *args)
+    return response_success('success', Pagination(page, size, role_list, total['len']))
+
+
+@user_bp.route('/roles/<int:id>', methods=['DELETE'])
+@jwt_required
+@permission_required(['admin'])
+def delete_role(id):
+    is_succ = user_dao.delete_role_by_id(id)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)
+
+
+@user_bp.route('/roles/<int:id>', methods=['PUT'])
+@jwt_required
+@permission_required(['admin'])
+def update_role(id):
+    name = request.json.get('name', None)
+    if name is None:
+        raise ContentEmptyException()
+
+    is_succ = user_dao.update_role_by_id(id, name)
+
+    if not is_succ:
+        raise DBException()
+
+    return response_success('success', {'id': id, 'name': name})

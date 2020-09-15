@@ -39,19 +39,6 @@ def count_total(where_sql, *args):
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from `user` {where_sql}', (*args,))
 
 
-def count_total_role(where_sql, *args):
-    return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from role {where_sql}', (*args,))
-
-
-def add_role(name):
-    return MysqlOp().op_sql('INSERT INTO role (`name`) VALUES (%s)', (name))
-
-
-def get_role_pagination(page, size, where_sql, *args):
-    return MysqlOp().select_all(f'SELECT * FROM role {where_sql} LIMIT %s OFFSET %s',
-                                (*args, size, (page - 1) * size))
-
-
 def delete_user_by_id(id):
     return MysqlOp().op_sql('DELETE FROM user WHERE id = %s', (id))
 
@@ -68,3 +55,24 @@ def update_by_rid(rid, id):
 
 def update_user_by_id(username, id):
     return MysqlOp().op_sql('UPDATE `user` SET username = %s WHERE id = %s', (username, id))
+
+
+def count_total_role(where_sql, *args):
+    return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from role {where_sql}', (*args,))
+
+
+def add_role(name):
+    return MysqlOp().op_sql('INSERT INTO role (`name`) VALUES (%s)', (name))
+
+
+def get_role_pagination(page, size, where_sql, *args):
+    return MysqlOp().select_all(f'SELECT * FROM role {where_sql} LIMIT %s OFFSET %s',
+                                (*args, size, (page - 1) * size))
+
+
+def delete_role_by_id(id):
+    return MysqlOp().op_sql('DELETE FROM role WHERE id = %s', (id))
+
+
+def update_role_by_id(id, name):
+    return MysqlOp().op_sql('UPDATE role SET name = %s WHERE id = %s', (name, id))
