@@ -34,7 +34,7 @@ def permission_required(permission: List[str]):
         def wrapper(*args, **kwargs):
             verify_jwt_in_request()
             claims = get_jwt_claims()
-            if list(set(claims['roles'] & set(permission))):
+            if list(set(claims['roles']) & set(permission)):
                 return func(*args, **kwargs)
             else:
                 return response_fail_exception(InsufficientPermissions())

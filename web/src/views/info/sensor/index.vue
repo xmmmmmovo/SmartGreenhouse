@@ -266,7 +266,7 @@ export default class extends Vue {
       const tHeader = ['uuid', '设备名', '温度', '湿度', '是否存在火灾隐患', '是否缺少光照', '是否缺少水源', '记录时间']
       const filterVal = ['hardware_uuid', 'name', 'temperature', 'humidity', 'is_fire', 'is_illum', 'is_dry', 'record_time']
       const data = formatJson(filterVal, this.list)
-      exportJson2Excel(tHeader, data, '硬件信息')
+      exportJson2Excel(tHeader, data, '传感器信息')
       this.downloadLoading = false
     }
 }

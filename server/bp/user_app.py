@@ -123,3 +123,52 @@ def sensor_get_data():
     user_list = get_user_pagination(page, size, where_sql, *args)
     total = count_total(where_sql, *args)
     return response_success('success', Pagination(page, size, user_list, total['len']))
+
+
+@user_bp.route('/add_role', methods=['POST'])
+@jwt_required
+@permission_required(['admin'])
+def add_role():
+    name = request.json.get('name', None)
+    if name is None:
+        raise ContentEmptyException()
+    is_succ = user_dao.add_role(name)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)
+
+
+@user_bp.route('/roles', methods=['GET'])
+@jwt_required
+@permission_required(['admin'])
+def get_roles_list():
+    return response_success('success', list(map(lambda x: x['name'], user_dao.select_roles())))
+
+
+@user_bp.route('/user/<int:id>', methods=['DELETE'])
+@jwt_required
+@permission_required(['admin'])
+def delete_user(id):
+    is_succ = user_dao.delete_user_by_id(id)
+    if not is_succ:
+        raise DBException()
+    return response_success('success', None)
+
+
+@user_bp.route('/user/<int:id>', methods=['PUT'])
+@jwt_required
+@permission_required(['admin'])
+def update_user(id):
+    username = request.json.get('username', None)
+    name = request.json.get('name', None)
+    if username is None or name is None:
+        raise ContentEmptyException()
+
+    rid = user_dao.select_role_id_by_userid(name)['id']
+    is_succ1 = user_dao.update_by_rid(rid, id)
+    is_succ2 = user_dao.update_user_by_id(username, id)
+
+    if not is_succ1 or not is_succ2:
+        raise DBException()
+
+    return response_success('success', {'id': id, 'username': username, 'name': name})

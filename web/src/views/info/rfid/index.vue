@@ -222,7 +222,7 @@ export default class extends Vue {
       const tHeader = ['uuid', '使用用户', '记录时间', '客户端名称']
       const filterVal = ['hardware_uuid', 'username', 'log_time', 'name']
       const data = formatJson(filterVal, this.list)
-      exportJson2Excel(tHeader, data, '硬件信息')
+      exportJson2Excel(tHeader, data, 'RFID信息')
       this.downloadLoading = false
     }
 }

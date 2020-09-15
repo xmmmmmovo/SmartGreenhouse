@@ -37,3 +37,29 @@ def get_user_pagination(page, size, where_sql, *args):
 
 def count_total(where_sql, *args):
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from `user` {where_sql}', (*args,))
+
+
+def add_role(name):
+    return MysqlOp().op_sql('INSERT INTO role (`name`) VALUES (%s)', (name))
+
+
+def select_roles():
+    return MysqlOp().select_all('SELECT `name` FROM role')
+
+
+def delete_user_by_id(id):
+    return MysqlOp().op_sql('DELETE FROM user WHERE id = %s', (id))
+
+
+def select_role_id_by_userid(name):
+    mp = MysqlOp()
+    return mp.select_one('SELECT role.id as id FROM role WHERE `name` = %s',
+                         (name,))
+
+
+def update_by_rid(rid, id):
+    return MysqlOp().op_sql('UPDATE user_roles SET role_id = %s WHERE user_id = %s', (rid, id))
+
+
+def update_user_by_id(username, id):
+    return MysqlOp().op_sql('UPDATE `user` SET username = %s WHERE id = %s', (username, id))

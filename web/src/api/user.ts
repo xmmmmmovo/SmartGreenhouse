@@ -13,3 +13,22 @@ export const getUserData = (params: any) =>
     method: 'get',
     params
   })
+
+export const getRolesData = () =>
+  request({
+    url: '/user/roles',
+    method: 'get'
+  })
+
+export const deleteUserData = (id: number) =>
+  request({
+    url: `/user/user/${id}`,
+    method: 'delete'
+  })
+
+export const updateUserData = (id: number, data: any) =>
+  request({
+    url: `/user/user/${id}`,
+    method: 'put',
+    data
+  })

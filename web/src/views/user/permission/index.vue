@@ -8,32 +8,6 @@
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-      <el-select
-        v-model="listQuery.type"
-        placeholder="类型"
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in typeOptions"
-          :key="item.label"
-          :label="item.label"
-          :value="item.label"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.ordered"
-        style="width: 140px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
       <el-button
         class="filter-item"
         type="primary"
@@ -50,6 +24,14 @@
         @click="handleDownload"
       >
         导出
+      </el-button>
+      <el-button
+        class="filter-item"
+        type="primary"
+        icon="el-icon-user"
+        @click="handleCreate"
+      >
+        添加用户
       </el-button>
     </div>
 
@@ -68,52 +50,24 @@
         width="80"
       >
         <template slot-scope="{$index}">
-          <span>{{ (listQuery.ordered[0] === '+') ? $index + 1 : total - $index }}</span>
+          <span>{{ $index + 1 }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        label="名称"
+        label="用户名"
         min-width="65px"
       >
         <template slot-scope="{row}">
+          {{ row.username }}
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="权限"
+      >
+        <template slot-scope="{row}">
           {{ row.name }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="uuid"
-        min-width="120px"
-      >
-        <template slot-scope="{row}">
-          {{ row.uuid }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="温度阈值"
-      >
-        <template slot-scope="{row}">
-          {{ row.temperature_limit }}
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="湿度阈值"
-      >
-        <template slot-scope="{row}">
-          {{ row.humidity_limit }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="是否在线"
-        class-name="status-col"
-        width="100"
-      >
-        <template slot-scope="{row}">
-          <el-tag :type="row.up ? 'success' : 'info'">
-            {{ row.up ? '在线': '已下线' }}
-          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -158,28 +112,22 @@
       <el-form
         ref="dataForm"
         :rules="rules"
-        :model="tempHardwareData"
+        :model="tempUserData"
         label-position="left"
         label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item
-          label="名称"
+          label="用户名"
           prop="name"
         >
-          <el-input v-model="tempHardwareData.name" />
+          <el-input v-model="tempUserData.username" />
         </el-form-item>
         <el-form-item
-          label="温度阈值"
-          prop="temperature_limit"
+          label="权限"
+          prop="roles"
         >
-          <el-input v-model="tempHardwareData.temperature_limit" />
-        </el-form-item>
-        <el-form-item
-          label="湿度阈值"
-          prop="humidity_limit"
-        >
-          <el-input v-model="tempHardwareData.humidity_limit" />
+          aaa
         </el-form-item>
       </el-form>
       <div
@@ -191,9 +139,9 @@
         </el-button>
         <el-button
           type="primary"
-          @click="updateData()"
+          @click="dialogStatus==='create'?createData():updateData()"
         >
-          {{ '更新数据' }}
+          {{ '确认' }}
         </el-button>
       </div>
     </el-dialog>
@@ -208,61 +156,50 @@ import { exportJson2Excel } from '@/utils/excel'
 import { formatJson } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 import { defaultHardwareData, deleteHardwareData, getHardwareList, updateHardwareData } from '@/api/hardware'
-import { IHardwareData } from '@/api/types'
+import { IHardwareData, IUserData } from '@/api/types'
 import { UserModule } from '@/store/modules/user'
+import { defaultUserData, getUserData } from '@/api/user'
 
-@Component({
-  name: 'HardwareTable',
-  components: {
-    Pagination
-  }
-})
+  @Component({
+    name: 'UserTable',
+    components: {
+      Pagination
+    }
+  })
 export default class extends Vue {
     private total = 0
-    private list: IHardwareData[] = []
+    private list: IUserData[] = []
     private listLoading = true
     private listQuery = {
       page: 1,
       size: 20,
-      ordered: '+',
-      query: '',
-      type: 'id'
+      query: ''
     }
-    private sortOptions = [
-      { label: 'Ascending', key: '+' },
-      { label: 'Descending', key: '-' }
-    ]
-    private typeOptions = [
-      { label: 'humidity_limit' },
-      { label: 'temperature_limit' },
-      { label: 'name' },
-      { label: 'uuid' },
-      { label: 'id' }
-    ]
     private downloadLoading = false
     private isAdmin = UserModule.roles.includes('admin')
 
     private rules = {
       name: [{ required: true, message: 'name is required', trigger: 'change' }],
-      temperature_limit: [{ required: true, message: 'temperature_limit is required', trigger: 'change' }],
-      humidity_limit: [{ required: true, message: 'humidity_limit is required', trigger: 'change' }]
+      roles: [{ required: true, message: 'roles is required', trigger: 'change' }]
     }
+
     private dialogStatus = ''
     private textMap = {
       update: 'Edit',
       create: 'Create'
     }
     private dialogFormVisible = false
-    private tempHardwareData = defaultHardwareData
+    private tempUserData = defaultUserData
+
+    private roleName = ''
 
     created() {
       this.getList()
     }
 
     private async getList() {
-      this.listQuery.ordered = this.listQuery.ordered[0] + this.listQuery.type
       this.listLoading = true
-      const { data } = await getHardwareList(this.listQuery)
+      const { data } = await getUserData(this.listQuery)
       this.list = data.list
       this.total = data.total
       console.log(this.list)
@@ -282,6 +219,37 @@ export default class extends Vue {
       console.log(this.listQuery)
       this.listQuery.page = 1
       this.getList()
+    }
+
+    private resetTempUserData() {
+      this.tempUserData = cloneDeep(defaultUserData)
+    }
+
+    private handleCreate() {
+      this.resetTempUserData()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        (this.$refs.dataForm as Form).clearValidate()
+      })
+    }
+
+    private createData() {
+      (this.$refs.dataForm as Form).validate(async(valid) => {
+        if (valid) {
+          const userData = this.tempUserData
+          const { data } = await createArticle({ article: articleData })
+          data.article.timestamp = Date.parse(data.article.timestamp)
+          this.list.unshift(data.article)
+          this.dialogFormVisible = false
+          this.$notify({
+            title: '成功',
+            message: '创建成功',
+            type: 'success',
+            duration: 2000
+          })
+        }
+      })
     }
 
     private updateData() {
@@ -309,7 +277,7 @@ export default class extends Vue {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async() => {
-        const tempData = Object.assign({}, row)
+        const tempData = Object.assign({}, this.tempHardwareData)
         await deleteHardwareData(tempData.id, { 'up': tempData.up })
         this.$notify({
           title: '成功',

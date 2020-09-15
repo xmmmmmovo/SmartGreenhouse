@@ -136,6 +136,16 @@ export const asyncRoutes: RouteConfig[] = [
         }
       },
       {
+        path: 'permission',
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/user/permission/index.vue'),
+        name: 'Permission',
+        meta: {
+          title: '权限管理',
+          icon: 'permission',
+          affix: true
+        }
+      },
+      {
         path: 'distribute',
         component: () => import(/* webpackChunkName: "dashboard" */ '@/views/user/distribution/index.vue'),
         name: 'Distribute',
