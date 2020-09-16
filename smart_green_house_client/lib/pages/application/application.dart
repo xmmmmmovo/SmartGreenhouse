@@ -23,7 +23,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   int _page = 0;
 
   // tab 页标题
-  final List<String> _tabTitles = ['主页面', '翻译', '动态', '我的'];
+  final List<String> _tabTitles = ['主页面', '我的'];
 
   // 页控制器
   PageController _pageController;
@@ -132,7 +132,13 @@ class _ApplicationPageState extends State<ApplicationPage>
       appBar: _buildAppBar(),
       body: _buildPageView(),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _page == 2 ? null : null,
+      floatingActionButton: _page == 0
+          ? FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: AppColors.primaryBackground,
+              child: Icon(Icons.add, color: Colors.black),
+            )
+          : null,
     );
   }
 }
