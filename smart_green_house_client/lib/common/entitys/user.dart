@@ -45,32 +45,32 @@ class UserRegisterRequestEntity {
 
 // 登录返回
 class UserLoginResponseEntity {
-  String accessToken;
-  String displayName;
-  String email;
-  int todayWords;
-  String avatar;
+  String token;
 
-  UserLoginResponseEntity(
-      {@required this.accessToken,
-      this.displayName,
-      this.email,
-      this.avatar,
-      this.todayWords = 20});
+  UserLoginResponseEntity({@required this.token});
 
   factory UserLoginResponseEntity.fromJson(Map<String, dynamic> json) =>
-      UserLoginResponseEntity(
-          accessToken: json["token"],
-          displayName: json["name"],
-          avatar: json["avatar"],
-          todayWords: json["todayWords"],
-          email: json["email"]);
+      UserLoginResponseEntity(token: json["token"]);
+
+  Map<String, dynamic> toJson() => {"token": this.token};
+}
+
+// 获取信息返回
+class UserInfoEntity {
+  UserInfoEntity({this.username, this.roles, this.token});
+
+  String username;
+  List<String> roles;
+  String token;
+
+  factory UserInfoEntity.fromJson(Map<String, dynamic> json) => UserInfoEntity(
+      username: json["username"],
+      roles: List<String>.from(json["roles"].map((x) => x)),
+      token: json["token"]);
 
   Map<String, dynamic> toJson() => {
-        "token": accessToken,
-        "name": displayName,
-        "email": email,
-        "avatar": avatar,
-        "todayWords": todayWords
+        "roles": List<dynamic>.from(roles.map((x) => x)),
+        "username": username,
+        "token": token
       };
 }

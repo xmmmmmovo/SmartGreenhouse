@@ -12,8 +12,8 @@ import 'common/values/values.dart';
 /// 全局配置
 class Global {
   /// 用户配置
-  static UserLoginResponseEntity profile = UserLoginResponseEntity(
-    accessToken: null,
+  static UserInfoEntity profile = UserInfoEntity(
+    token: null,
   );
 
   /// 是否 ios
@@ -69,7 +69,7 @@ class Global {
     // 读取离线用户信息
     var _profileJSON = StorageUtil().getJSON(STORAGE_USER_PROFILE_KEY);
     if (_profileJSON != null) {
-      profile = UserLoginResponseEntity.fromJson(_profileJSON);
+      profile = UserInfoEntity.fromJson(_profileJSON);
       isOfflineLogin = true;
     }
 
@@ -82,7 +82,7 @@ class Global {
   }
 
   // 持久化 用户信息
-  static Future<bool> saveProfile(UserLoginResponseEntity userResponse) {
+  static Future<bool> saveProfile(UserInfoEntity userResponse) {
     profile = userResponse;
     return StorageUtil()
         .setJSON(STORAGE_USER_PROFILE_KEY, userResponse.toJson());

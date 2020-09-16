@@ -66,46 +66,10 @@ class _AccountPageState extends State<AccountPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: duSetWidth(108),
-                          height: duSetWidth(108),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Positioned(
-                                top: 0,
-                                child: Container(
-                                  width: duSetWidth(108),
-                                  height: duSetWidth(108),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryBackground,
-                                    boxShadow: [
-                                      Shadows.primaryShadow,
-                                    ],
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(duSetWidth(108) / 2)),
-                                  ),
-                                  child: Container(),
-                                ),
-                              ),
-                              Positioned(
-                                  child: CircleAvatar(
-                                radius: 50,
-                                backgroundImage:
-                                    Image.network(Global.profile.avatar).image,
-                              )),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // 文字
-                      Spacer(),
                       Container(
                         margin: EdgeInsets.only(bottom: 9),
                         child: Text(
-                          Global.profile.displayName,
+                          Global.profile.username,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: AppColors.primaryText,
@@ -116,7 +80,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                       ),
                       Text(
-                        Global.profile.email,
+                        "权限: " + Global.profile.roles[0],
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.primaryText,
@@ -272,37 +236,6 @@ class _AccountPageState extends State<AccountPage> {
         children: <Widget>[
           _buildUserHeader(),
           divider10Px(),
-          _buildCell(
-              title: "目标单词数",
-              number: Global.profile.todayWords,
-              hasArrow: true,
-              onTap: () {
-                print("tapped");
-                EasyDialog(
-                    title: returnStyledText("更改每日目标:"),
-                    height: 220,
-                    contentList: [
-                      inputTextEdit(
-                          controller: _todayWordsController,
-                          hintText: "请输入更改过后的数值"),
-                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                        FlatButton(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          textColor: AppColors.primaryText,
-                          onPressed: () {
-                            Global.profile.todayWords =
-                                int.parse(_todayWordsController.value.text);
-                            Global.saveProfile(Global.profile);
-                            Navigator.of(context).pop();
-                          },
-                          child: new Text(
-                            "好的",
-                            textScaleFactor: 1.2,
-                          ),
-                        ),
-                      ])
-                    ]).show(context);
-              }),
           _buildCell(
             title: "今日已背单词",
             number: 0,

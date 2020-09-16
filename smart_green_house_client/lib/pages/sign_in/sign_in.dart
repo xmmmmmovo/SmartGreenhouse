@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
       context: context,
       params: params,
     );
-    Global.saveProfile(userProfile);
+    Global.saveProfile(null);
 
     ExtendedNavigator.rootNavigator
         .popAndPushNamed(Routes.applicationPageRoute);

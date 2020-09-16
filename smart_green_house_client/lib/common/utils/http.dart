@@ -72,6 +72,9 @@ class HttpUtil {
     }, onResponse: (Response response) {
       if (response.data["code"] != 200) {
         toastInfo(msg: response.data["message"]);
+      } else if (response.data["code"] == 403) {
+        var context = response.request.extra["context"];
+        goLoginPage(context);
       }
       response.data = response.data["data"];
       return response; // continue
@@ -84,7 +87,7 @@ class HttpUtil {
       var context = e.request.extra["context"];
       if (context != null) {
         switch (eInfo.code) {
-          case 401: // 没有权限 重新登录
+          case 403: // 没有权限 重新登录
             goLoginPage(context);
             break;
           default:
@@ -211,7 +214,7 @@ class HttpUtil {
   /// 读取本地配置
   Map<String, dynamic> getAuthorizationHeader() {
     var headers;
-    String accessToken = Global.profile?.accessToken;
+    String accessToken = Global.profile?.token;
     if (accessToken != null) {
       headers = {
         'Authorization': 'Bearer $accessToken',
