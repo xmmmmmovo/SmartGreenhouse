@@ -12,7 +12,7 @@ class UserAPI {
     var response = await HttpUtil().post(
       '/account/token',
       context: context,
-      params: params,
+      data: params,
     );
     return UserLoginResponseEntity.fromJson(response);
   }
@@ -25,7 +25,7 @@ class UserAPI {
     var response = await HttpUtil().post(
       '/account',
       context: context,
-      params: params,
+      data: params,
     );
     return UserLoginResponseEntity.fromJson(response);
   }

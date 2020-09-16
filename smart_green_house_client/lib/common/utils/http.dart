@@ -264,7 +264,7 @@ class HttpUtil {
   Future post(
     String path, {
     @required BuildContext context,
-    dynamic params,
+    dynamic data,
     Options options,
   }) async {
     Options requestOptions = options ?? Options();
@@ -276,7 +276,7 @@ class HttpUtil {
       requestOptions = requestOptions.merge(headers: _authorization);
     }
     var response = await dio.post(path,
-        data: params, options: requestOptions, cancelToken: cancelToken);
+        data: data, options: requestOptions, cancelToken: cancelToken);
     return response.data;
   }
 
@@ -284,7 +284,7 @@ class HttpUtil {
   Future put(
     String path, {
     @required BuildContext context,
-    dynamic params,
+    dynamic data,
     Options options,
   }) async {
     Options requestOptions = options ?? Options();
@@ -296,7 +296,7 @@ class HttpUtil {
       requestOptions = requestOptions.merge(headers: _authorization);
     }
     var response = await dio.put(path,
-        data: params, options: requestOptions, cancelToken: cancelToken);
+        data: data, options: requestOptions, cancelToken: cancelToken);
     return response.data;
   }
 
@@ -304,7 +304,7 @@ class HttpUtil {
   Future patch(
     String path, {
     @required BuildContext context,
-    dynamic params,
+    dynamic data,
     Options options,
   }) async {
     Options requestOptions = options ?? Options();
@@ -316,7 +316,7 @@ class HttpUtil {
       requestOptions = requestOptions.merge(headers: _authorization);
     }
     var response = await dio.patch(path,
-        data: params, options: requestOptions, cancelToken: cancelToken);
+        data: data, options: requestOptions, cancelToken: cancelToken);
     return response.data;
   }
 
@@ -344,7 +344,7 @@ class HttpUtil {
   Future postForm(
     String path, {
     @required BuildContext context,
-    dynamic params,
+    dynamic data,
     Options options,
   }) async {
     Options requestOptions = options ?? Options();
@@ -356,7 +356,7 @@ class HttpUtil {
       requestOptions = requestOptions.merge(headers: _authorization);
     }
     var response = await dio.post(path,
-        data: FormData.fromMap(params),
+        data: FormData.fromMap(data),
         options: requestOptions,
         cancelToken: cancelToken);
     return response.data;

@@ -37,9 +37,6 @@ dependencies:
   # 上下拉刷新
   flutter_easyrefresh: ^2.1.0
 
-  # 骨架屏
-  pk_skeleton: ^0.0.2
-
   # 提示 toast
   fluttertoast: ^3.1.3
 
@@ -52,14 +49,8 @@ dependencies:
   shared_preferences: ^0.5.6+3
   cached_network_image: ^2.0.0
 
-  # 加密安全 SHA
-  crypto: ^2.1.3
-
   # 状态管理
   provider: ^4.0.4
-
-  # webView
-  webview_flutter: ^0.3.20+2
 
   # loading
   loading_animations: ^2.1.0
@@ -82,16 +73,8 @@ dependencies:
   # 对话框
   easy_dialog: ^1.0.5
 
-  # 错误收集
-  sentry: ^3.0.1
-
   # 粘性头部
   flutter_sticky_header: "^0.4.0"
-  # google翻译
-  translator: ^0.1.3
-  # 语音转文字
-  speech_to_text: 2.3.0
-  speech_recognition: 0.3.0+1
 
   # 音频播放库
   audioplayers: ^0.15.1
