@@ -334,10 +334,10 @@ export default class extends Vue {
 
     private handleDownload() {
       this.downloadLoading = true
-      const tHeader = ['id', '权限名']
-      const filterVal = ['id', 'name']
+      const tHeader = ['id', '客户端名称', 'uuid', '派发用户名']
+      const filterVal = ['id', 'name', 'uuid', 'username']
       const data = formatJson(filterVal, this.list)
-      exportJson2Excel(tHeader, data, '权限信息')
+      exportJson2Excel(tHeader, data, '派发信息')
       this.downloadLoading = false
     }
 }
