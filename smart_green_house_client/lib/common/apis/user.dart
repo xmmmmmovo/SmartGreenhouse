@@ -29,16 +29,4 @@ class UserAPI {
     );
     return UserLoginResponseEntity.fromJson(response);
   }
-
-  /// 更新
-  static void update(
-    @required BuildContext context,
-    UserUpdateEntity params,
-  ) async {
-    var response = await HttpUtil().patch(
-      '/account',
-      context: context,
-      params: params,
-    );
-  }
 }

@@ -23,45 +23,24 @@ class UserLoginRequestEntity {
 }
 
 class UserRegisterRequestEntity {
-  String email;
   String name;
   String password;
 
   UserRegisterRequestEntity({
-    @required this.email,
     @required this.password,
     @required this.name,
   });
 
   factory UserRegisterRequestEntity.fromJson(Map<String, dynamic> json) =>
       UserRegisterRequestEntity(
-        email: json["email"],
         password: json["password"],
         name: json["name"],
       );
 
   Map<String, dynamic> toJson() => {
-        "email": email,
         "password": password,
         "name": name,
       };
-}
-
-// 更新请求
-class UserUpdateEntity {
-  String displayName;
-  int todayWords;
-
-  UserUpdateEntity({this.displayName, this.todayWords = 20});
-
-  factory UserUpdateEntity.fromJson(Map<String, dynamic> json) =>
-      UserUpdateEntity(
-        displayName: json["name"],
-        todayWords: json["todayWords"],
-      );
-
-  Map<String, dynamic> toJson() =>
-      {"name": displayName, "todayWords": todayWords};
 }
 
 // 登录返回

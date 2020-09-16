@@ -16,7 +16,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   // fullName email password 的控制器
   final TextEditingController _fullnameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
 
   // 返回上一页
@@ -30,10 +29,6 @@ class _SignUpPageState extends State<SignUpPage> {
       toastInfo(msg: '用户名不能小于5位');
       return;
     }
-    if (!duIsEmail(_emailController.value.text)) {
-      toastInfo(msg: '请正确输入邮件');
-      return;
-    }
     if (!duCheckStringLength(_passController.value.text, 6)) {
       toastInfo(msg: '密码不能小于6位');
       return;
@@ -42,7 +37,6 @@ class _SignUpPageState extends State<SignUpPage> {
     UserLoginResponseEntity userProfile = await UserAPI.register(
         context: context,
         params: UserRegisterRequestEntity(
-            email: _emailController.value.text,
             password: _passController.value.text,
             name: _fullnameController.value.text));
     ExtendedNavigator.rootNavigator.pop();
@@ -80,12 +74,6 @@ class _SignUpPageState extends State<SignUpPage> {
             keyboardType: TextInputType.text,
             hintText: "Full name",
             marginTop: 0,
-          ),
-          // email input
-          inputTextEdit(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            hintText: "Email",
           ),
           // password input
           inputTextEdit(

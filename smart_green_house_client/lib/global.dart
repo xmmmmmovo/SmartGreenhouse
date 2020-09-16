@@ -16,9 +16,6 @@ class Global {
     accessToken: null,
   );
 
-  /// 发布渠道
-  static String channel = "xiaomi";
-
   /// 是否 ios
   static bool isIOS = Platform.isIOS;
 

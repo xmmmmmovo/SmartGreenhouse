@@ -293,11 +293,6 @@ class _AccountPageState extends State<AccountPage> {
                             Global.profile.todayWords =
                                 int.parse(_todayWordsController.value.text);
                             Global.saveProfile(Global.profile);
-                            UserAPI.update(
-                                context,
-                                UserUpdateEntity(
-                                    displayName: Global.profile.displayName,
-                                    todayWords: Global.profile.todayWords));
                             Navigator.of(context).pop();
                           },
                           child: new Text(

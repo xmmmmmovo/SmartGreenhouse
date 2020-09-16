@@ -9,7 +9,7 @@ class AppState with ChangeNotifier {
 
   get isGrayFilter => _isGrayFilter;
 
-  AppState({bool isGrayFilter = false, remainWords = 0}) {
+  AppState({bool isGrayFilter = false}) {
     this._isGrayFilter = isGrayFilter;
   }
 
