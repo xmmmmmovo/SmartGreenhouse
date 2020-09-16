@@ -67,9 +67,6 @@ class Global {
     isFirstOpen = !StorageUtil().getBool(STORAGE_DEVICE_ALREADY_OPEN_KEY);
     if (isFirstOpen) {
       StorageUtil().setBool(STORAGE_DEVICE_ALREADY_OPEN_KEY, true);
-      var tmp = TranslateListObject();
-      tmp.translateList = [];
-      StorageUtil().setJSON(STORAGE_TRANSLATION_RES_KEY, tmp.toJson());
     }
 
     // 读取离线用户信息

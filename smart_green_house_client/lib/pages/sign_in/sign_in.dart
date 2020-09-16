@@ -166,71 +166,6 @@ class _SignInPageState extends State<SignInPage> {
               ],
             ),
           ),
-          // Spacer(),
-
-          // Fogot password
-          Container(
-            height: duSetHeight(22),
-            margin: EdgeInsets.only(top: duSetHeight(20)),
-            child: FlatButton(
-              onPressed: () {
-                toastInfo(msg: "还没做的忘记密码(没有公共邮箱desu");
-              },
-              child: Text(
-                "Fogot password?",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.secondaryElementText,
-                  fontFamily: "Avenir",
-                  fontWeight: FontWeight.w400,
-                  fontSize: duSetFontSize(16),
-                  height: 1, // 设置下行高，否则字体下沉
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 第三方登录
-  Widget _buildThirdPartyLogin() {
-    return Container(
-      width: duSetWidth(295),
-      margin: EdgeInsets.only(bottom: duSetHeight(40)),
-      child: Column(
-        children: <Widget>[
-          // title
-          Text(
-            "Or sign in with social networks",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: AppColors.primaryText,
-              fontFamily: "Avenir",
-              fontWeight: FontWeight.w400,
-              fontSize: duSetFontSize(16),
-            ),
-          ),
-          // 按钮
-          Padding(
-            padding: EdgeInsets.only(top: duSetHeight(20)),
-            child: Row(
-              children: <Widget>[
-                btnFlatButtonBorderOnlyWidget(
-                  onPressed: () {},
-                  width: 132,
-                  iconFileName: "qq",
-                ),
-                Spacer(),
-                btnFlatButtonBorderOnlyWidget(
-                  onPressed: () {},
-                  width: 132,
-                  iconFileName: "wechat",
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -262,7 +197,6 @@ class _SignInPageState extends State<SignInPage> {
             _buildLogo(),
             _buildInputForm(),
             Spacer(),
-            _buildThirdPartyLogin(),
             _buildSignupButton(),
           ],
         ),

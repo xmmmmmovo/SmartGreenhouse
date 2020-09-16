@@ -310,24 +310,9 @@ class _AccountPageState extends State<AccountPage> {
               }),
           _buildCell(
             title: "今日已背单词",
-            number: appState.remainWords == null ? 0 : appState.remainWords,
+            number: 0,
             hasArrow: true,
           ),
-          _buildCell(
-              title: "总共背诵单词",
-              hasArrow: true,
-              onTap: () {
-                ExtendedNavigator.rootNavigator
-                    .pushNamed(Routes.remeberedWordDetailRoute);
-              }),
-          divider10Px(),
-          _buildCell(
-              title: "我的收藏",
-              hasArrow: true,
-              onTap: () {
-                ExtendedNavigator.rootNavigator
-                    .pushNamed(Routes.starDetailsRoute);
-              }),
           divider10Px(),
           _buildCell(
             title: "墨水屏模式",

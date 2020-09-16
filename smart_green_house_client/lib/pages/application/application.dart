@@ -97,18 +97,7 @@ class _ApplicationPageState extends State<ApplicationPage>
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              color: AppColors.primaryText,
-            ),
-            onPressed: () {
-              ExtendedNavigator.rootNavigator
-                  .pushNamed(Routes.searchResultRoute);
-            },
-          )
-        ]);
+        actions: <Widget>[]);
   }
 
   // 内容页
