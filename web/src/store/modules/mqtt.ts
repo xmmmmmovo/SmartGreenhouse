@@ -67,6 +67,7 @@ class Mqtt extends VuexModule implements IMqttState {
         if (topic === 'sensor_data') {
           let recv = JSON.parse(payload.toString())
           let notification: string = ''
+          let uuid = recv.uuid
           if (+recv.temperature > +recv.temperature_limit) {
             notification += '危险！温度失控！\n'
           }
@@ -85,7 +86,7 @@ class Mqtt extends VuexModule implements IMqttState {
           if (notification !== '') {
             Notification({
               title: '警报！',
-              message: notification,
+              message: `uuid为:${uuid}的设备出现问题！${notification}`,
               duration: 60000,
               type: 'warning'
             })

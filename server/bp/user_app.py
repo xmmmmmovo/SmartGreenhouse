@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from db.user_dao import get_user_pagination, count_total, count_total_role, get_role_pagination, get_all_users, \
     get_all_role
 from exception.custom_exceptions import ContentEmptyException, DBException, DataNotFoundException, \
-    PasswordErrorException, DataNotSatisfyException, UnAuthorizedException
+    PasswordErrorException, DataNotSatisfyException, UnAuthorizedException, AdminNameErrorException
 from model.Pagination import Pagination
 from response import response_success
 from db import user_dao
@@ -20,19 +20,22 @@ user_bp = Blueprint('user_app', __name__, url_prefix='/user')
 def register():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
+    admin_name = request.json.get('adminName', None)
 
     if len(password) < 6:
         raise DataNotSatisfyException()
 
-    if username is None or password is None:
+    if username is None or password is None or admin_name is None:
         raise ContentEmptyException()
+
+    admin = user_dao.select_admin_by_username(admin_name)
+    if admin is None:
+        raise AdminNameErrorException()
 
     is_succ = user_dao.insert_user(username, password)
     if not is_succ:
         raise DBException()
-    u = user.User(username, ['manager'])
-    token = create_access_token(identity=u)
-    return response_success("success", token)
+    return response_success("success", None)
 
 
 @user_bp.route("/login", methods=['POST'])

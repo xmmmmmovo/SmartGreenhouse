@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   // fullName email password 的控制器
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  final TextEditingController _adminNameController = TextEditingController();
 
   // 返回上一页
   _handleNavPop() {
@@ -25,10 +26,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   // 执行注册操作
   _handleSignUp() async {
-    if (!duCheckStringLength(_fullnameController.value.text, 5)) {
-      toastInfo(msg: '用户名不能小于5位');
-      return;
-    }
     if (!duCheckStringLength(_passController.value.text, 6)) {
       toastInfo(msg: '密码不能小于6位');
       return;
@@ -38,8 +35,9 @@ class _SignUpPageState extends State<SignUpPage> {
         context: context,
         params: UserRegisterRequestEntity(
             password: _passController.value.text,
-            name: _fullnameController.value.text));
-    ExtendedNavigator.rootNavigator.pop();
+            username: _fullnameController.value.text,
+            adminName: _adminNameController.value.text));
+    Navigator.pop(context);
   }
 
   // logo
@@ -72,17 +70,22 @@ class _SignUpPageState extends State<SignUpPage> {
           inputTextEdit(
             controller: _fullnameController,
             keyboardType: TextInputType.text,
-            hintText: "Full name",
+            hintText: "用户名",
             marginTop: 0,
           ),
           // password input
           inputTextEdit(
             controller: _passController,
             keyboardType: TextInputType.visiblePassword,
-            hintText: "Password",
+            hintText: "密码",
             isPassword: true,
           ),
-
+          inputTextEdit(
+            controller: _adminNameController,
+            keyboardType: TextInputType.text,
+            hintText: "管理员名称",
+            isPassword: true,
+          ),
           // 创建
           Container(
             height: duSetHeight(44),

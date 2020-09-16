@@ -10,11 +10,24 @@ class UserAPI {
     UserLoginRequestEntity params,
   }) async {
     var response = await HttpUtil().post(
-      '/account/token',
+      '/user/login',
       context: context,
       data: params,
     );
     return UserLoginResponseEntity.fromJson(response);
+  }
+
+  /// 登录
+  static Future<UserInfoEntity> info({
+    @required BuildContext context,
+    UserLoginRequestEntity params,
+  }) async {
+    var response = await HttpUtil().post(
+      '/user/info',
+      context: context,
+      data: params,
+    );
+    return UserInfoEntity.fromJson(response);
   }
 
   /// 登录
@@ -23,7 +36,7 @@ class UserAPI {
     UserRegisterRequestEntity params,
   }) async {
     var response = await HttpUtil().post(
-      '/account',
+      '/user/register',
       context: context,
       data: params,
     );

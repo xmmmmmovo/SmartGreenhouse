@@ -10,6 +10,10 @@ class PasswordErrorException(HTTPException):
     code = ResponseCode.db_error
     description = "密码错误！"
 
+class AdminNameErrorException(HTTPException):
+    code = ResponseCode.db_error
+    description = "管理员账户名称错误！"
+
 class DataNotSatisfyException(HTTPException):
     code = ResponseCode.data_error
     description = "字段未达到指定要求！"

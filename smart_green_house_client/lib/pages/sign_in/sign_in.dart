@@ -29,17 +29,13 @@ class _SignInPageState extends State<SignInPage> {
 
   // 执行登录操作
   _handleSignIn() async {
-    if (!duCheckStringLength(_nameController.value.text, 5)) {
-      toastInfo(msg: '用户名不能小于5位');
-      return;
-    }
     if (!duCheckStringLength(_passController.value.text, 6)) {
       toastInfo(msg: '密码不能小于6位');
       return;
     }
 
     UserLoginRequestEntity params = UserLoginRequestEntity(
-      name: _nameController.value.text,
+      username: _nameController.value.text,
       password: _passController.value.text,
     );
 
@@ -47,7 +43,13 @@ class _SignInPageState extends State<SignInPage> {
       context: context,
       params: params,
     );
-    Global.saveProfile(null);
+    Global.profile.token = userProfile.token;
+    UserInfoEntity info = await UserAPI.info(
+      context: context,
+      params: null,
+    );
+    info.token = userProfile.token;
+    Global.saveProfile(info);
 
     ExtendedNavigator.rootNavigator
         .popAndPushNamed(Routes.applicationPageRoute);

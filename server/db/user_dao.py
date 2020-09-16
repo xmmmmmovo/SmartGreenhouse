@@ -14,6 +14,13 @@ def select_user_by_username(username):
     return mp.select_one('SELECT id, username, password FROM `user` WHERE username = %s', (username))
 
 
+def select_admin_by_username(username):
+    mp = MysqlOp()
+    return mp.select_one("SELECT id, username FROM `user` WHERE username = %s AND id IN "
+                         "(SELECT user_roles.user_id FROM user_roles WHERE user_roles.role_id IN "
+                         "(SELECT role.id FROM role WHERE role.`name` = 'admin'))", (username))
+
+
 def select_roles_by_userid(user_id):
     mp = MysqlOp()
     return mp.select_all('SELECT role.`name` FROM role WHERE id IN (SELECT role_id FROM user_roles WHERE user_id = %s)',
@@ -87,4 +94,3 @@ def delete_role_by_id(id):
 
 def update_role_by_id(id, name):
     return MysqlOp().op_sql('UPDATE role SET name = %s WHERE id = %s', (name, id))
-

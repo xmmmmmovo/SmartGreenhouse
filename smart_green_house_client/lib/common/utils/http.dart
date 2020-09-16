@@ -71,7 +71,7 @@ class HttpUtil {
       return options; //continue
     }, onResponse: (Response response) {
       if (response.data["code"] != 200) {
-        toastInfo(msg: response.data["message"]);
+        toastInfo(msg: response.data["msg"]);
       } else if (response.data["code"] == 403) {
         var context = response.request.extra["context"];
         goLoginPage(context);

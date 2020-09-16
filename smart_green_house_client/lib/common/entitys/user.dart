@@ -2,45 +2,44 @@ import 'package:flutter/foundation.dart';
 
 // 登录请求
 class UserLoginRequestEntity {
-  String name;
+  String username;
   String password;
 
   UserLoginRequestEntity({
-    @required this.name,
+    @required this.username,
     @required this.password,
   });
 
   factory UserLoginRequestEntity.fromJson(Map<String, dynamic> json) =>
       UserLoginRequestEntity(
-        name: json["name"],
+        username: json["username"],
         password: json["password"],
       );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
+        "username": username,
         "password": password,
       };
 }
 
 class UserRegisterRequestEntity {
-  String name;
+  String username;
   String password;
+  String adminName;
 
-  UserRegisterRequestEntity({
-    @required this.password,
-    @required this.name,
-  });
+  UserRegisterRequestEntity(
+      {@required this.password,
+      @required this.username,
+      @required this.adminName});
 
   factory UserRegisterRequestEntity.fromJson(Map<String, dynamic> json) =>
       UserRegisterRequestEntity(
-        password: json["password"],
-        name: json["name"],
-      );
+          password: json["password"],
+          username: json["username"],
+          adminName: json["adminName"]);
 
-  Map<String, dynamic> toJson() => {
-        "password": password,
-        "name": name,
-      };
+  Map<String, dynamic> toJson() =>
+      {"password": password, "username": username, "adminName": adminName};
 }
 
 // 登录返回
