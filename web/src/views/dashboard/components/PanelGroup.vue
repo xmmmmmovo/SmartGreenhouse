@@ -11,22 +11,21 @@
     >
       <div
         class="card-panel"
-        @click="handleSetLineChartData('newVisitis')"
       >
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon
-            name="peoples"
+            :name="groupData[0].icon"
             class="card-panel-icon"
           />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            {{ groupData[0].name }}
           </div>
           <count-to
-            :start-val="0"
-            :end-val="102400"
-            :duration="2600"
+            :start-val="groupData[0].startValue"
+            :end-val="groupData[0].endValue"
+            :duration="groupData[0].duration"
             class="card-panel-num"
           />
         </div>
@@ -40,22 +39,21 @@
     >
       <div
         class="card-panel"
-        @click="handleSetLineChartData('messages')"
       >
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon
-            name="message"
+            :name="groupData[1].icon"
             class="card-panel-icon"
           />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Messages
+            {{ groupData[1].name }}
           </div>
           <count-to
-            :start-val="0"
-            :end-val="81212"
-            :duration="3000"
+            :start-val="groupData[1].startValue"
+            :end-val="groupData[1].endValue"
+            :duration="groupData[1].duration"
             class="card-panel-num"
           />
         </div>
@@ -69,22 +67,21 @@
     >
       <div
         class="card-panel"
-        @click="handleSetLineChartData('purchases')"
       >
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon
-            name="money"
+            :name="groupData[2].icon"
             class="card-panel-icon"
           />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Purchases
+            {{ groupData[2].name }}
           </div>
           <count-to
-            :start-val="0"
-            :end-val="9280"
-            :duration="3200"
+            :start-val="groupData[2].startValue"
+            :end-val="groupData[2].endValue"
+            :duration="groupData[2].duration"
             class="card-panel-num"
           />
         </div>
@@ -98,22 +95,21 @@
     >
       <div
         class="card-panel"
-        @click="handleSetLineChartData('shoppings')"
       >
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon
-            name="shopping"
+            :name="groupData[3].icon"
             class="card-panel-icon"
           />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Shoppings
+            {{ groupData[3].name }}
           </div>
           <count-to
-            :start-val="0"
-            :end-val="13600"
-            :duration="3600"
+            :start-val="groupData[3].startValue"
+            :end-val="groupData[3].endValue"
+            :duration="groupData[3].duration"
             class="card-panel-num"
           />
         </div>
@@ -123,8 +119,47 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import CountTo from 'vue-count-to'
+
+export interface IPanelGroupData {
+  icon: string,
+  name: string,
+  startValue: number,
+  endValue: number,
+  duration: number
+}
+
+const defaultPanelData: IPanelGroupData[] = [
+  {
+    icon: '',
+    name: '',
+    startValue: 0,
+    endValue: 0,
+    duration: 0
+  },
+  {
+    icon: '',
+    name: '',
+    startValue: 0,
+    endValue: 0,
+    duration: 0
+  },
+  {
+    icon: '',
+    name: '',
+    startValue: 0,
+    endValue: 0,
+    duration: 0
+  },
+  {
+    icon: '',
+    name: '',
+    startValue: 0,
+    endValue: 0,
+    duration: 0
+  }
+]
 
 @Component({
   name: 'PanelGroup',
@@ -133,9 +168,7 @@ import CountTo from 'vue-count-to'
   }
 })
 export default class extends Vue {
-  private handleSetLineChartData(type: string) {
-    this.$emit('handleSetLineChartData', type)
-  }
+  @Prop({ default: defaultPanelData }) private groupData!: IPanelGroupData[]
 }
 </script>
 

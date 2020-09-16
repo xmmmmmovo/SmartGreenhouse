@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group />
+    <panel-group :group-data="panelData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
@@ -11,9 +11,47 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
+import LineChart from '@/views/dashboard/components/LineChart.vue'
+// @ts-ignore
+import PanelGroup, { IPanelGroupData } from '@/views/dashboard/components/PanelGroup.vue'
+
+const panelGroupData: IPanelGroupData[] = [
+  {
+    icon: 'hardware',
+    name: '总硬件数',
+    startValue: 0,
+    endValue: 0,
+    duration: 1
+  },
+  {
+    icon: 'user',
+    name: '总用户数',
+    startValue: 0,
+    endValue: 0,
+    duration: 1
+  },
+  {
+    icon: '在线',
+    name: '',
+    startValue: 0,
+    endValue: 0,
+    duration: 1
+  },
+  {
+    icon: '',
+    name: '',
+    startValue: 0,
+    endValue: 0,
+    duration: 1
+  }
+]
 
   @Component({
-    name: 'DashboardAdmin'
+    name: 'DashboardAdmin',
+    components: {
+      PanelGroup,
+      LineChart
+    }
   })
 export default class extends Vue {
   get name() {
@@ -22,6 +60,10 @@ export default class extends Vue {
 
   get roles() {
     return UserModule.roles
+  }
+
+  get panelData() {
+    return panelGroupData
   }
 }
 </script>
