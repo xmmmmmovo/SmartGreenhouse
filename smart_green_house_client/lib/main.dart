@@ -33,7 +33,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'jpr',
+      title: 'greenhouse',
       debugShowCheckedModeBanner: false,
       builder: ExtendedNavigator<AppRouter>(
         initialRoute: Routes.indexPageRoute,

@@ -79,6 +79,9 @@ dependencies:
   # 音频播放库
   audioplayers: ^0.15.1
 
+  # mqtt client
+  mqtt_client: ^8.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

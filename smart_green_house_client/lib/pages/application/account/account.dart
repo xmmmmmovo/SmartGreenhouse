@@ -20,6 +20,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   TextEditingController _todayWordsController = TextEditingController();
+  int number = 0;
 
   // 个人页面 头部
   Widget _buildUserHeader() {
@@ -228,6 +229,12 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
@@ -237,8 +244,8 @@ class _AccountPageState extends State<AccountPage> {
           _buildUserHeader(),
           divider10Px(),
           _buildCell(
-            title: "今日已背单词",
-            number: 0,
+            title: "管理设备数",
+            number: number,
             hasArrow: true,
           ),
           divider10Px(),

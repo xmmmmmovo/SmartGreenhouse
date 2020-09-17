@@ -19,7 +19,6 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(
@@ -30,9 +29,7 @@ class _IndexPageState extends State<IndexPage> {
     );
 
     return Scaffold(
-      body: Global.isFirstOpen == true
-          ? SignInPage()
-          : Global.isOfflineLogin == true ? ApplicationPage() : SignInPage(),
+      body: Global.isOfflineLogin == true ? ApplicationPage() : SignInPage(),
     );
   }
 }
