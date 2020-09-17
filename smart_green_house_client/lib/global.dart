@@ -62,14 +62,16 @@ class Global {
     var _profileJSON = StorageUtil().getJSON(STORAGE_USER_PROFILE_KEY);
     if (_profileJSON != null) {
       profile = UserInfoEntity.fromJson(_profileJSON);
-//      profile = await UserAPI.info(context: null, params: null);
+      profile = await UserAPI.info(context: null, params: null);
       isOfflineLogin = true;
+      appState.connectMqtt(profile.username);
     }
   }
 
   // 持久化 用户信息
   static Future<bool> saveProfile(UserInfoEntity userResponse) {
     profile = userResponse;
+    appState.connectMqtt(profile.username);
     return StorageUtil()
         .setJSON(STORAGE_USER_PROFILE_KEY, userResponse.toJson());
   }
