@@ -27,6 +27,9 @@ GPIO.setup(r_pin, GPIO.OUT)
 GPIO.setup(g_pin, GPIO.OUT)
 GPIO.setup(b_pin, GPIO.OUT)
 
+light_pin = 27
+GPIO.setup(light_pin, GPIO.OUT)
+
 pwm_r = GPIO.PWM(r_pin, 70)
 pwm_g = GPIO.PWM(g_pin, 70)
 pwm_b = GPIO.PWM(b_pin, 70)
@@ -50,6 +53,7 @@ illumination_regular = True
 is_init = False
 is_temperature_limit = True
 is_humidity_limit = True
+is_shine = False
 
 sensor_data_topic = 'sensor_data'
 setup_threshold_topic = 'setup_threshold'
@@ -154,12 +158,19 @@ def solid_task():
 
 @scheduler.task('interval', id='illumination_task', seconds=10, misfire_grace_time=5)
 def illumination_task():
-    global illumination_regular
+    global illumination_regular, is_shine
     logger.info('start illumination check')
     illumination_regular = True
     if GPIO.input(illumination_pin) == 1:
         logger.info('需要光照！')
         illumination_regular = False
+        if is_shine == False:
+            GPIO.output(light_pin, True)
+            is_shine = True
+    else:
+        if is_shine == True:
+            GPIO.output(light_pin, False)
+            is_shine = False
     data['illumination'] = not illumination_regular
 
 
