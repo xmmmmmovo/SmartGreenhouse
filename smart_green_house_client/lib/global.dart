@@ -62,7 +62,9 @@ class Global {
     var _profileJSON = StorageUtil().getJSON(STORAGE_USER_PROFILE_KEY);
     if (_profileJSON != null) {
       profile = UserInfoEntity.fromJson(_profileJSON);
+      final token = profile.token;
       profile = await UserAPI.info(context: null, params: null);
+      profile.token = token;
       isOfflineLogin = true;
       appState.connectMqtt(profile.username);
     }

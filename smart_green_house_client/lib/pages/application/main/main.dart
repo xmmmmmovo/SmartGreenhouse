@@ -22,12 +22,33 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   AppState appState;
+  Timer _timer;
+  MqttSensorData data;
 
-  void fetchData() async {}
+  _startTimmer() {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
+      setState(() {
+        data = appState.nowData;
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _startTimmer();
+  }
+
+  @override
+  void dispose() {
+    if (_timer != null) {
+      // 页面销毁时触发定时器销毁
+      if (_timer.isActive) {
+        // 判断定时器是否是激活状态
+        _timer.cancel();
+      }
+    }
+    super.dispose();
   }
 
   _buildCard(String title, String value) {
@@ -71,18 +92,26 @@ class _MainPageState extends State<MainPage> {
                     childAspectRatio: 1.0 //宽高比为1时，子widget
                     ),
                 children: <Widget>[
-                  _buildCard('温度', '暂无'),
-                  _buildCard('湿度', '暂无'),
-                  _buildCard('火灾风险', '暂无'),
-                  _buildCard('失水风险', '暂无'),
-                  _buildCard('光照不足风险', '暂无')
+                  _buildCard(
+                      '温度', data == null ? '暂无' : data.temperature + '℃'),
+                  _buildCard('湿度', data == null ? '暂无' : data.humidity + '%'),
+                  _buildCard(
+                      '火灾风险', data == null ? '暂无' : data.fire ? '存在！' : '不存在'),
+                  _buildCard(
+                      '失水风险', data == null ? '暂无' : data.solid ? '存在！' : '不存在'),
+                  _buildCard('光照不足风险',
+                      data == null ? '暂无' : data.illumination ? '存在！' : '不存在'),
+                  _buildCard(
+                      '设备名称',
+                      appState.nowUUid == null
+                          ? '暂无'
+                          : appState.uuidHardwareData[appState.nowUUid].name)
                 ])));
   }
 
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context);
-
     return _buildContainer();
   }
 }

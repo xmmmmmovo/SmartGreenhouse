@@ -20,7 +20,6 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   TextEditingController _todayWordsController = TextEditingController();
-  int number = 0;
 
   // 个人页面 头部
   Widget _buildUserHeader() {
@@ -245,7 +244,7 @@ class _AccountPageState extends State<AccountPage> {
           divider10Px(),
           _buildCell(
             title: "管理设备数",
-            number: number,
+            number: appState.hardwareData.length,
             hasArrow: true,
           ),
           divider10Px(),

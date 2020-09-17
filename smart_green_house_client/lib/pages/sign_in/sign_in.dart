@@ -102,7 +102,7 @@ class _SignInPageState extends State<SignInPage> {
           Container(
             margin: EdgeInsets.only(top: duSetHeight(15)),
             child: Text(
-              "English",
+              "智能大棚",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: AppColors.primaryText,
@@ -114,7 +114,7 @@ class _SignInPageState extends State<SignInPage> {
             ),
           ),
           Text(
-            "person",
+            "安卓端",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.primaryText,
@@ -141,7 +141,7 @@ class _SignInPageState extends State<SignInPage> {
           inputTextEdit(
             controller: _nameController,
             keyboardType: TextInputType.text,
-            hintText: "Name",
+            hintText: "用户名",
             marginTop: 0,
             // autofocus: true,
           ),
@@ -149,7 +149,7 @@ class _SignInPageState extends State<SignInPage> {
           inputTextEdit(
             controller: _passController,
             keyboardType: TextInputType.visiblePassword,
-            hintText: "Password",
+            hintText: "密码",
             isPassword: true,
           ),
 

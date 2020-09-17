@@ -181,7 +181,7 @@ def regular_task():
     logger.info(f"{fire_regular}/{solid_regular}/{illumination_regular}/{is_temperature_limit}/{is_humidity_limit}")
 
 
-@scheduler.task('interval', id='upload_task', minutes=1, misfire_grace_time=30)
+@scheduler.task('interval', id='upload_task', seconds=30, misfire_grace_time=30)
 def upload_task():
     logger.info('start upload sensor data!')
     mqtt_client.publish(sensor_data_topic, json.dumps(data))

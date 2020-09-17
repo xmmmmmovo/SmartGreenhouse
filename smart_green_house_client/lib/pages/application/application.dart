@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_green_house_client/common/provider/provider.dart';
 import 'package:smart_green_house_client/common/router/router.gr.dart';
 import 'package:smart_green_house_client/common/utils/utils.dart';
 import 'package:smart_green_house_client/common/values/values.dart';
@@ -27,6 +30,8 @@ class _ApplicationPageState extends State<ApplicationPage>
 
   // 页控制器
   PageController _pageController;
+
+  AppState _appState;
 
   // 底部导航项目
   final List<BottomNavigationBarItem> _bottomTabs = <BottomNavigationBarItem>[
@@ -126,15 +131,50 @@ class _ApplicationPageState extends State<ApplicationPage>
     );
   }
 
+  Text _returnStyledText(String s) {
+    return Text(s,
+        style: TextStyle(
+          color: AppColors.primaryText,
+          fontFamily: "gengsha",
+          fontWeight: FontWeight.w400,
+          fontSize: duSetFontSize(18),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    _appState = Provider.of<AppState>(context);
+
     return Scaffold(
       appBar: _buildAppBar(),
       body: _buildPageView(),
       bottomNavigationBar: _buildBottomNavigationBar(),
       floatingActionButton: _page == 0
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () async {
+                await _appState.fetchData();
+                EasyDialog(
+                    title: _returnStyledText("更改设备:"),
+                    height: 220,
+                    contentList: [
+                      DropdownButton(
+                        items: _appState.hardwareData
+                            .map((e) => DropdownMenuItem(
+                                child: Text(e.name), value: e.uuid))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _appState.setUUID(value);
+                            _appState.resetSensorData();
+                          });
+                        },
+                        underline: null,
+                        elevation: 4,
+                        hint: Text('请选择设备'),
+                        value: _appState.nowUUid,
+                      )
+                    ]).show(context);
+              },
               backgroundColor: AppColors.primaryBackground,
               child: Icon(Icons.add, color: Colors.black),
             )
