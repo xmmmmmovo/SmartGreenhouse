@@ -30,16 +30,59 @@ class _MainPageState extends State<MainPage> {
     super.initState();
   }
 
+  _buildCard(String title, String value) {
+    return Card(
+      margin: const EdgeInsets.all(10.0),
+      color: AppColors.primaryElement,
+      elevation: 10,
+      // 阴影
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(color: Colors.grey, width: 1),
+      ),
+//            borderOnForeground: false,
+      child: ListTile(
+        title: Text(title,
+            style: TextStyle(
+                fontSize: 20,
+                color: AppColors.primaryElementText,
+                fontWeight: FontWeight.w500)),
+        subtitle: Row(
+          children: <Widget>[
+            Text(value,
+                style: TextStyle(
+                    fontSize: 40,
+                    color: AppColors.primaryElementText,
+                    fontWeight: FontWeight.w500))
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildContainer() {
+    return Center(
+        child: Container(
+            alignment: Alignment.center,
+            color: AppColors.primaryBackground,
+            child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, //横轴三个子widget
+                    childAspectRatio: 1.0 //宽高比为1时，子widget
+                    ),
+                children: <Widget>[
+                  _buildCard('温度', '暂无'),
+                  _buildCard('湿度', '暂无'),
+                  _buildCard('火灾风险', '暂无'),
+                  _buildCard('失水风险', '暂无'),
+                  _buildCard('光照不足风险', '暂无')
+                ])));
+  }
+
   @override
   Widget build(BuildContext context) {
     appState = Provider.of<AppState>(context);
 
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[Text('111')],
-      ),
-    );
+    return _buildContainer();
   }
 }

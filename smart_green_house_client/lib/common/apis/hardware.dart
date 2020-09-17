@@ -76,3 +76,5 @@ class HardwareData {
         "uuid": uuid,
       };
 }
+
+class MqttSensorData {}
