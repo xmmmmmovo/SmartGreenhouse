@@ -8,6 +8,7 @@ import 'package:smart_green_house_client/common/entitys/entitys.dart';
 import 'package:smart_green_house_client/common/utils/utils.dart';
 import 'package:smart_green_house_client/common/values/values.dart';
 import 'package:smart_green_house_client/common/widgets/toast.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// 系统相应状态
 class AppState with ChangeNotifier {
@@ -17,6 +18,7 @@ class AppState with ChangeNotifier {
   Map<String, HardwareData> uuidHardwareData;
   String nowUUid;
   MqttSensorData nowData;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   get isGrayFilter => _isGrayFilter;
 
@@ -30,6 +32,39 @@ class AppState with ChangeNotifier {
 
   void setUUID(String uuid) {
     nowUUid = uuid;
+  }
+
+  Future<dynamic> _onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {}
+
+  Future<dynamic> _onSelectNotification(String payload) async {
+    print(payload);
+  }
+
+  Future<void> initNotificationPlugin() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: _onDidReceiveLocalNotification);
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: _onSelectNotification);
+  }
+
+  Future<dynamic> showNotification(
+      int id, String title, String message, String notificationPayload) async {
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        '114514', 'smart_green_house_client', 'Just a smart greenhouse client',
+        importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        id, title, message, platformChannelSpecifics,
+        payload: notificationPayload);
   }
 
   // 切换灰色滤镜
@@ -78,6 +113,38 @@ class AppState with ChangeNotifier {
       if (nowUUid != null && nowUUid == mqttdata.uuid) {
         nowData = mqttdata;
       }
+      String notificationMessage = '警报！存在';
+      if (mqttdata.fire) {
+        notificationMessage += ' 火灾 ';
+      }
+
+      if (mqttdata.solid) {
+        notificationMessage += ' 缺水 ';
+      }
+
+      if (mqttdata.illumination) {
+        notificationMessage += ' 光照不足 ';
+      }
+
+      if (double.parse(mqttdata.temperature) > mqttdata.temperatureLimit) {
+        notificationMessage += ' 温度失控 ';
+      }
+
+      if (double.parse(mqttdata.humidity) > mqttdata.humidityLimit) {
+        notificationMessage += ' 湿度失控 ';
+      }
+
+      if (notificationMessage.length == 5) {
+        return;
+      }
+
+      notificationMessage += '问题！';
+
+      showNotification(
+          uuidHardwareData[mqttdata.uuid].id,
+          uuidHardwareData[mqttdata.uuid].name + '出现异常！',
+          notificationMessage,
+          mqttdata.uuid);
     });
   }
 }

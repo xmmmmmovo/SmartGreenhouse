@@ -54,6 +54,7 @@ is_init = False
 is_temperature_limit = True
 is_humidity_limit = True
 is_shine = False
+first_illum_not_enough = 0
 
 sensor_data_topic = 'sensor_data'
 setup_threshold_topic = 'setup_threshold'
@@ -158,7 +159,7 @@ def solid_task():
 
 @scheduler.task('interval', id='illumination_task', seconds=10, misfire_grace_time=5)
 def illumination_task():
-    global illumination_regular, is_shine
+    global illumination_regular, is_shine, first_illum_not_enough
     logger.info('start illumination check')
     illumination_regular = True
     if GPIO.input(illumination_pin) == 1:
@@ -167,11 +168,14 @@ def illumination_task():
         if is_shine == False:
             GPIO.output(light_pin, True)
             is_shine = True
+        first_illum_not_enough += 1
     else:
+        first_illum_not_enough = 0
         if is_shine == True:
             GPIO.output(light_pin, False)
             is_shine = False
-    data['illumination'] = not illumination_regular
+    if first_illum_not_enough == 2:
+        data['illumination'] = not illumination_regular
 
 
 @scheduler.task('interval', id='regular_task', seconds=3, misfire_grace_time=1)

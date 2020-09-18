@@ -68,25 +68,17 @@ class Global {
       profile.token = token;
       isOfflineLogin = true;
       appState.connectMqtt(profile.username);
+      await appState.fetchData();
     }
 
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher');
-    var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+    await appState.initNotificationPlugin();
   }
 
   // 持久化 用户信息
-  static Future<bool> saveProfile(UserInfoEntity userResponse) {
+  static Future<bool> saveProfile(UserInfoEntity userResponse) async {
     profile = userResponse;
     appState.connectMqtt(profile.username);
+    appState.fetchData();
     return StorageUtil()
         .setJSON(STORAGE_USER_PROFILE_KEY, userResponse.toJson());
   }
