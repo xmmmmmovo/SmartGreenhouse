@@ -19,3 +19,10 @@ export const getSensorData = (params: any) =>
     method: 'get',
     params
   })
+
+export const getDailySensorData = (params: any) =>
+  request({
+    url: '/sensor/get_data_hour',
+    method: 'get',
+    params
+  })

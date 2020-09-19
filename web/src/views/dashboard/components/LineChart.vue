@@ -12,8 +12,9 @@ import { mixins } from 'vue-class-component'
 import ResizeMixin from '@/components/Charts/mixins/resize'
 
 export interface ILineChartData {
-  expectedData: number[]
-  actualData: number[]
+  temperatureData: number[]
+  humidityData: number[]
+  timeData: string[]
 }
 
 @Component({
@@ -53,7 +54,7 @@ export default class extends mixins(ResizeMixin) {
     if (this.chart) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: chartData.timeData,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -79,10 +80,10 @@ export default class extends mixins(ResizeMixin) {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['温度', '湿度']
         },
         series: [{
-          name: 'expected',
+          name: '温度',
           itemStyle: {
             color: '#FF005A',
             lineStyle: {
@@ -92,12 +93,12 @@ export default class extends mixins(ResizeMixin) {
           },
           smooth: true,
           type: 'line',
-          data: chartData.expectedData,
+          data: chartData.temperatureData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: '湿度',
           smooth: true,
           type: 'line',
           itemStyle: {
@@ -110,7 +111,7 @@ export default class extends mixins(ResizeMixin) {
               color: '#f3f8ff'
             }
           },
-          data: chartData.actualData,
+          data: chartData.humidityData,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]

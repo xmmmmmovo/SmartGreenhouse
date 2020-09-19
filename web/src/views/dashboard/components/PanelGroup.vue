@@ -6,7 +6,7 @@
     <el-col
       :xs="12"
       :sm="12"
-      :lg="6"
+      :lg="12"
       class="card-panel-col"
     >
       <div
@@ -34,7 +34,7 @@
     <el-col
       :xs="12"
       :sm="12"
-      :lg="6"
+      :lg="12"
       class="card-panel-col"
     >
       <div
@@ -59,67 +59,11 @@
         </div>
       </div>
     </el-col>
-    <el-col
-      :xs="12"
-      :sm="12"
-      :lg="6"
-      class="card-panel-col"
-    >
-      <div
-        class="card-panel"
-      >
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon
-            :name="groupData[2].icon"
-            class="card-panel-icon"
-          />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            {{ groupData[2].name }}
-          </div>
-          <count-to
-            :start-val="groupData[2].startValue"
-            :end-val="groupData[2].endValue"
-            :duration="groupData[2].duration"
-            class="card-panel-num"
-          />
-        </div>
-      </div>
-    </el-col>
-    <el-col
-      :xs="12"
-      :sm="12"
-      :lg="6"
-      class="card-panel-col"
-    >
-      <div
-        class="card-panel"
-      >
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon
-            :name="groupData[3].icon"
-            class="card-panel-icon"
-          />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            {{ groupData[3].name }}
-          </div>
-          <count-to
-            :start-val="groupData[3].startValue"
-            :end-val="groupData[3].endValue"
-            :duration="groupData[3].duration"
-            class="card-panel-num"
-          />
-        </div>
-      </div>
-    </el-col>
   </el-row>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import CountTo from 'vue-count-to'
 
 export interface IPanelGroupData {
@@ -131,20 +75,6 @@ export interface IPanelGroupData {
 }
 
 const defaultPanelData: IPanelGroupData[] = [
-  {
-    icon: '',
-    name: '',
-    startValue: 0,
-    endValue: 0,
-    duration: 0
-  },
-  {
-    icon: '',
-    name: '',
-    startValue: 0,
-    endValue: 0,
-    duration: 0
-  },
   {
     icon: '',
     name: '',

@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from db.rfid_dao import get_rfid_pagination, get_rfid_pagination_by_username
-from db.sensor_dao import count_total, get_sensor_pagination_by_username, get_sensor_pagination
+from db.sensor_dao import count_total, get_sensor_pagination_by_username, get_sensor_pagination, get_sensor_data_hourly
 from model.Pagination import Pagination
 from response import response_success
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
@@ -66,3 +66,14 @@ def sensor_get_data():
         sensor_list[i]['record_time'] = sensor_list[i]['record_time'].strftime("%m/%d/%Y, %H:%M:%S")
 
     return response_success('success', Pagination(page, size, sensor_list, total['len']))
+
+
+@sensor_bp.route('/get_data_hour', methods=['GET'])
+@jwt_required
+def getDailySensorData():
+    uuid = request.args.get('uuid', None)
+    logger.info(uuid)
+    if uuid is None:
+        raise ContentEmptyException()
+
+    return response_success('success', get_sensor_data_hourly(uuid))

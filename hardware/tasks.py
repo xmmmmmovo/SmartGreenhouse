@@ -175,7 +175,9 @@ def illumination_task():
             GPIO.output(light_pin, False)
             is_shine = False
     if first_illum_not_enough == 2:
-        data['illumination'] = not illumination_regular
+        data['illumination'] = True
+    else:
+        data['illumination'] = False
 
 
 @scheduler.task('interval', id='regular_task', seconds=3, misfire_grace_time=1)

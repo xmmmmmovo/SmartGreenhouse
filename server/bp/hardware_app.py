@@ -65,7 +65,7 @@ def get_hardware_client_id():
         raise DBException()
 
     page = int(request.args.get('page', 1))
-    size = int(request.args.get('size', 9999))
+    size = int(request.args.get('size', 99999))
     ordered = request.args.get('ordered', '+id')
     query = request.args.get('query', '')
 

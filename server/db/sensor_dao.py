@@ -24,3 +24,9 @@ def get_sensor_pagination_by_username(username, page, size, ordered, where_sql, 
 
 def count_total(where_sql, *args):
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from sensor_data {where_sql}', (*args,))
+
+
+def get_sensor_data_hourly(uuid):
+    return MysqlOp().select_all(
+        'SELECT temperature, humidity, record_time FROM sensor_data WHERE hardware_uuid = %s AND id > ((SELECT MAX(id) FROM sensor_data) - 100)',
+        (uuid))
