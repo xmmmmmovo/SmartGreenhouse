@@ -96,6 +96,7 @@ export default class extends Vue {
         tempData.forEach(value => {
           temp.temperatureData.push(value.temperature)
           temp.humidityData.push(value.humidity)
+          // @ts-ignore
           temp.timeData.push(parseTime(value.record_time))
         })
       } else {

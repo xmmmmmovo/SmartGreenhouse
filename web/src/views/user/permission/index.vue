@@ -62,27 +62,28 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="isAdmin"
         label="操作"
         align="center"
         width="230"
         class-name="fixed-width"
       >
         <template slot-scope="{row, $index}">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-          >
-            {{ '编辑' }}
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, $index)"
-          >
-            {{ '删除' }}
-          </el-button>
+          <div v-if="row.name !== 'admin'">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="handleUpdate(row)"
+            >
+              {{ '编辑' }}
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(row, $index)"
+            >
+              {{ '删除' }}
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
