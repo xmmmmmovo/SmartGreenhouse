@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_echarts/flutter_echarts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_green_house_client/common/provider/provider.dart';
 
@@ -49,7 +51,7 @@ class _ChartPageState extends State<ChartPage> {
         option: '''
         {
         xAxis: {
-          data: ${_appState.sensorData.map((e) => '\'${e.recordTime}\'').toList().toString()},
+          data: ${_appState.sensorData.map((e) => '\'${DateFormat("yyyy-MM-dd hh:mm:ss").format(HttpDate.parse(e.recordTime))}\'').toList().toString()},
           boundaryGap: false,
           axisTick: {
             show: false
