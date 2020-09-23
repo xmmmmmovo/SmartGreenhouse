@@ -69,6 +69,7 @@ class Global {
       isOfflineLogin = true;
       appState.connectMqtt(profile.username);
       await appState.fetchData();
+      await appState.fetchSensorData();
     }
 
     await appState.initNotificationPlugin();
@@ -78,7 +79,8 @@ class Global {
   static Future<bool> saveProfile(UserInfoEntity userResponse) async {
     profile = userResponse;
     appState.connectMqtt(profile.username);
-    appState.fetchData();
+    await appState.fetchData();
+    appState.fetchSensorData();
     return StorageUtil()
         .setJSON(STORAGE_USER_PROFILE_KEY, userResponse.toJson());
   }

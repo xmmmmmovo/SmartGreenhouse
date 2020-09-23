@@ -19,6 +19,7 @@ class AppState with ChangeNotifier {
   String nowUUid;
   MqttSensorData nowData;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  List<SensorData> sensorData = [];
 
   get isGrayFilter => _isGrayFilter;
 
@@ -80,9 +81,13 @@ class AppState with ChangeNotifier {
     nowUUid = hardwareData.length == 0 ? null : hardwareData[0].uuid;
   }
 
+  Future<void> fetchSensorData() async {
+    sensorData =
+        (await SensorAPI.getSensorData(context: null, uuid: this.nowUUid));
+  }
+
   void _onConnected() {
     toastInfo(msg: '已成功连接！');
-    print("zhazha connect");
     _client.subscribe("sensor_data", MqttQos.atMostOnce);
   }
 

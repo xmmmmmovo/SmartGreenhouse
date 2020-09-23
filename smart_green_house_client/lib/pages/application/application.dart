@@ -7,6 +7,7 @@ import 'package:smart_green_house_client/common/router/router.gr.dart';
 import 'package:smart_green_house_client/common/utils/utils.dart';
 import 'package:smart_green_house_client/common/values/values.dart';
 import 'package:smart_green_house_client/common/widgets/widgets.dart';
+import 'package:smart_green_house_client/pages/application/chart/chart.dart';
 
 import 'account/account.dart';
 import 'main/main.dart';
@@ -26,7 +27,7 @@ class _ApplicationPageState extends State<ApplicationPage>
   int _page = 0;
 
   // tab 页标题
-  final List<String> _tabTitles = ['主页面', '我的'];
+  final List<String> _tabTitles = ['主页面', '数据图表', '我的'];
 
   // 页控制器
   PageController _pageController;
@@ -45,6 +46,18 @@ class _ApplicationPageState extends State<ApplicationPage>
         color: AppColors.secondaryElementText,
       ),
       title: Text('主页'),
+      backgroundColor: AppColors.primaryBackground,
+    ),
+    new BottomNavigationBarItem(
+      icon: Icon(
+        Iconfont.fav,
+        color: AppColors.tabBarElement,
+      ),
+      activeIcon: Icon(
+        Iconfont.fav,
+        color: AppColors.secondaryElementText,
+      ),
+      title: Text('图表'),
       backgroundColor: AppColors.primaryBackground,
     ),
     new BottomNavigationBarItem(
@@ -111,6 +124,7 @@ class _ApplicationPageState extends State<ApplicationPage>
       physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         MainPage(),
+        ChartPage(),
         AccountPage(),
       ],
       controller: _pageController,
@@ -149,7 +163,7 @@ class _ApplicationPageState extends State<ApplicationPage>
       appBar: _buildAppBar(),
       body: _buildPageView(),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _page == 0
+      floatingActionButton: _page == 0 || _page == 1
           ? FloatingActionButton(
               onPressed: () async {
                 await _appState.fetchData();
@@ -166,6 +180,7 @@ class _ApplicationPageState extends State<ApplicationPage>
                           setState(() {
                             _appState.setUUID(value);
                             _appState.resetSensorData();
+                            _appState.fetchSensorData();
                           });
                         },
                         underline: null,

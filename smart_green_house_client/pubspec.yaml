@@ -82,6 +82,9 @@ dependencies:
   # mqtt client
   mqtt_client: ^8.0.0
 
+  # 图表
+  flutter_echarts: 1.3.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
