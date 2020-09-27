@@ -7,7 +7,7 @@ def get_sensor_pagination(page, size, ordered, where_sql, *args):
     return MysqlOp().select_all(
         f"SELECT sensor_data.id, hardware_uuid, temperature, humidity, is_fire, is_dry, is_illum, record_time, `name` "
         f"FROM sensor_data LEFT JOIN hardware ON sensor_data.hardware_uuid = hardware.uuid "
-        f"{where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
+        f" {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
         (*args, size, (page - 1) * size))
 
 

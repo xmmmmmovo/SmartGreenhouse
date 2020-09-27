@@ -28,6 +28,7 @@ services:
       - 8083:8083
       - 8883:8883
       - 8084:8084
+      - 8081:8081
       - 18083:18083
     depends_on:
       - db
@@ -69,10 +70,3 @@ services:
       - ./config/redis.conf:/etc/redis/redis.conf:ro
     privileged: true
     command: redis-server --requirepass 7GhVu9i24mjK
-
-# 可选
-#  adminer:
-#    image: adminer
-#    restart: always
-#    ports:
-#      - 8080:8080

@@ -37,7 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
             password: _passController.value.text,
             username: _fullnameController.value.text,
             adminName: _adminNameController.value.text));
-    Navigator.pop(context);
+    ExtendedNavigator.rootNavigator.pop();
   }
 
   // logo

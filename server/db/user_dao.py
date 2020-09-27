@@ -39,11 +39,11 @@ def get_all_users():
 
 
 def get_user_pagination(page, size, where_sql, *args):
-    logger.info('get_sensor_pagination')
+    logger.info('get_user_pagination')
     return MysqlOp().select_all(
         f"SELECT `user`.id, username, role.`name` FROM `user` "
         f"LEFT JOIN user_roles ON `user`.id = user_roles.user_id "
-        f"LEFT JOIN role ON user_roles.role_id = role.id"
+        f"LEFT JOIN role ON user_roles.role_id = role.id "
         f"{where_sql} LIMIT %s OFFSET %s",
         (*args, size, (page - 1) * size))
 

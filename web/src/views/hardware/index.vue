@@ -125,6 +125,7 @@
       >
         <template slot-scope="{row, $index}">
           <el-button
+            v-show="row.up"
             type="primary"
             size="mini"
             @click="handleUpdate(row)"

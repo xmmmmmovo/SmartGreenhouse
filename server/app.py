@@ -1,6 +1,6 @@
 from flask import Flask
 
-from bp.rfid_bp import rfid_bp
+from bp.rfid_app import rfid_bp
 from bp.sensor_app import sensor_bp
 from response import response_success
 from time import time

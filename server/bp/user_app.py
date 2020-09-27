@@ -189,7 +189,7 @@ def get_roles_list():
     where_sql = ''
     args = []
     if query != '':
-        where_sql += f'WHERE `username` LIKE %s'
+        where_sql += f'WHERE `name` LIKE %s'
         args.append(f'%{query}%')
 
     role_list = get_role_pagination(page, size, where_sql, *args)
