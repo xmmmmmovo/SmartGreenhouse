@@ -1,0 +1,29 @@
+mysql:
+  host:
+  port:
+  user: root
+  password:
+  db: greenhouse
+  charset: utf8
+
+app:
+  host: 0.0.0.0
+  port: 9000
+  jwt_secret_key: 'greenhouse'
+  black_list_enabled: true
+  black_list_checks:
+    - refresh
+
+mqtt:
+  broker_url:
+  port: 8083
+  user:
+  pwd:
+  transport: websockets
+  client_id: server-mqtt
+  http_api_port: 8081
+  basic_auth_username: admin
+  basic_auth_password: public
+
+redis:
+  url: redis://:@/0

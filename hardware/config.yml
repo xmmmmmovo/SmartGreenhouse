@@ -1,0 +1,6 @@
+mqtt:
+  broker_url: ''
+  port: 8083
+  user:
+  pwd:
+  transport: websockets
