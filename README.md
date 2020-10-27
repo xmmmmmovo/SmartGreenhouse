@@ -10,8 +10,6 @@
 |  后端  | python, flask, mysql, redis, docker |
 |  硬件  |     raspberry pi, python, emqx      |
 
-
-
 ## 已知问题
 
 | 功能端 |                           问题描述                           |
@@ -22,6 +20,10 @@
 |  硬件  | 1. 缺少开关等互动装置 2. 缺少灯管等反馈装置3.RFID有时候会莫名其妙无法识别 |
 
 ## 截图
+
+### 架构图
+
+![image-20201027212644787](https://cdn.jsdelivr.net/gh/xmmmmmovo/ResourcesBackup/blog/pics/20201027212645.png)
 
 ### 硬件端
 
