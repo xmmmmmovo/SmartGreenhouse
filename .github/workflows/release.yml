@@ -27,7 +27,7 @@ jobs:
           java-version: "8.x"
       # 建立 Flutter 环境
       - name: Flutter action
-        uses: subosito/flutter-action@vlatest
+        uses: subosito/flutter-action@latest
         with:
           channel: "stable"
       - name: Cache Flutter dependencies
