@@ -1,6 +1,6 @@
 mysql:
-  host:
-  port:
+  host: db
+  port: mx/58MFuLJ6^%.q
   user: root
   password:
   db: greenhouse
@@ -15,10 +15,10 @@ app:
     - refresh
 
 mqtt:
-  broker_url:
+  broker_url: emqx
   port: 8083
-  user:
-  pwd:
+  user: emqx
+  pwd: public
   transport: websockets
   client_id: server-mqtt
   http_api_port: 8081
@@ -26,4 +26,4 @@ mqtt:
   basic_auth_password: public
 
 redis:
-  url: redis://:@/0
+  url: redis://:7GhVu9i24mjK@redis:6379/0

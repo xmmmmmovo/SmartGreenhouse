@@ -1,0 +1,87 @@
+# main.yml
+
+# 工作流程的名字
+name: Build release
+
+# 工作流程触发的时机，这里是当一个版本标签推送到仓库时触发
+on:
+  push:
+    tags:
+      - v*
+
+# 这个工作流程需要执行的任务
+jobs:
+  android:
+    name: android
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai   
+    # 这个任务的步骤
+    steps:
+      # 拉取项目代码
+      - uses: actions/checkout@v2
+      # 建立 java 环境
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.3.0
+        with:
+          java-version: "12.x"
+      # 建立 Flutter 环境
+      - name: Flutter action
+        uses: subosito/flutter-action@v1.1.1
+        with:
+          channel: "stable"
+          flutter-version: "1.12.x"
+      # 下载项目依赖
+      - run: flutter pub get
+      # 执行测试
+      - run: flutter test
+      # 打包 APK
+      - run: flutter build apk --release
+      # 发布到 Release
+      - name: Release apk
+        uses: ncipollo/release-action@v1.5.0
+        with:
+          artifacts: "./smart_green_house_client/build/app/outputs/apk/release/*.apk"
+          token: ${{ secrets.DEPLOY_KEY }}
+  web:
+    name: web
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai   
+    # 这个任务的步骤
+    steps:
+      # check it to your workflow can access it
+      # from: https://github.com/actions/checkout
+      - name: Checkout Repository master branch
+        uses: actions/checkout@master 
+        
+      # from: https://github.com/actions/setup-node  
+      - name: Setup Node.js 12.x 
+        uses: actions/setup-node@master
+        with:
+          node-version: "12.x"
+      
+      # Cache node_modules
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: runner.os−node−{{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            runner.OS−build−{{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Setup Hexo Dependencies
+        run: |
+          npm install @vue/cli -g
+          npm install
+          npm build
+      - uses: montudor/action-zip@v0.1.0
+        with:
+          args: zip -qq -r web_build.zip ./web/dist
+      # 发布到 Release
+      - name: Release apk
+        uses: ncipollo/release-action@v1.5.0
+        with:
+          artifacts: "./web_build.zip"
+          token: ${{ secrets.DEPLOY_KEY }}

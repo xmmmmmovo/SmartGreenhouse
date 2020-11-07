@@ -1,6 +1,6 @@
 mqtt:
-  broker_url: ''
+  broker_url: emqx
   port: 8083
-  user:
-  pwd:
+  user: emqx
+  pwd: public
   transport: websockets

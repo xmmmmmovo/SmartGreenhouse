@@ -17,12 +17,14 @@ services:
       - nginx
   db:
     image: mysql:5.7
+    container_name: db
     environment:
       - MYSQL_ROOT_PASSWORD=mx/58MFuLJ6^%.q
     volumes:
       - ./config/mysql:/docker-entrypoint-initdb.d
   emqx:
     image: emqx/emqx:v4.0.0
+    container_name: emqx
     ports:
       - 1883:1883
       - 8083:8083
@@ -64,6 +66,7 @@ services:
       - 9000:9000
   redis:
     image: redis:latest
+    container_name: redis
     restart: always
     volumes:
       - ./data:/data

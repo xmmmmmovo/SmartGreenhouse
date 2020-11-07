@@ -16,7 +16,7 @@ class Mqtt extends VuexModule implements IMqttState {
     username: 'emqx',
     password: 'public'
   }
-  url = 'ws://www.fivezha.cn:8083/mqtt'
+  url = 'ws://emqx:8083/mqtt'
   // @ts-ignore
   client = null
 
