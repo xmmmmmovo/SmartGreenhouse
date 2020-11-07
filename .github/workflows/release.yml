@@ -31,6 +31,11 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "1.12.x"
+            - name: Cache Flutter dependencies
+      - uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
       # 下载项目依赖
       - run: flutter pub get
         working-directory: ./smart_green_house_client
@@ -38,7 +43,7 @@ jobs:
       - run: flutter test
         working-directory: ./smart_green_house_client
       # 打包 APK
-      - run: flutter build apk --release
+      - run: flutter build apk --release --info
         working-directory: ./smart_green_house_client
       # 发布到 Release
       - name: Release apk
