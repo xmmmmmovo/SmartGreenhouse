@@ -43,7 +43,7 @@ jobs:
       - run: flutter test
         working-directory: ./smart_green_house_client
       # 打包 APK
-      - run: flutter build apk --release --info
+      - run: flutter build apk --info
         working-directory: ./smart_green_house_client
       # 发布到 Release
       - name: Release apk
