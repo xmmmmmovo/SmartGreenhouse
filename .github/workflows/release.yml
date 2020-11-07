@@ -78,7 +78,7 @@ jobs:
         run: |
           npm install @vue/cli -g
           npm install
-          npm build
+          npm run build
         working-directory: ./web
       - uses: montudor/action-zip@v0.1.0
         with:
