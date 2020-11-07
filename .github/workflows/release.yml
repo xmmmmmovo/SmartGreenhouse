@@ -31,6 +31,7 @@ jobs:
         with:
           channel: "stable"
           flutter-version: "1.12.x"
+      - run: cd smart_green_house_client
       # 下载项目依赖
       - run: flutter pub get
       # 执行测试
@@ -60,7 +61,7 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: "12.x"
-      
+      - run: cd web
       # Cache node_modules
       - name: Cache node modules
         uses: actions/cache@v2
@@ -71,7 +72,7 @@ jobs:
             runner.OS−build−{{ env.cache-name }}-
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
-      - name: Setup Hexo Dependencies
+      - name: Setup Web Dependencies
         run: |
           npm install @vue/cli -g
           npm install
@@ -80,7 +81,7 @@ jobs:
         with:
           args: zip -qq -r web_build.zip ./web/dist
       # 发布到 Release
-      - name: Release apk
+      - name: Release Dist
         uses: ncipollo/release-action@v1.5.0
         with:
           artifacts: "./web_build.zip"
