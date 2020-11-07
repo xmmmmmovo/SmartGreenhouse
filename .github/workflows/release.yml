@@ -39,8 +39,8 @@ jobs:
       - run: flutter pub get
         working-directory: ./smart_green_house_client
       # 执行测试
-      - run: flutter test
-        working-directory: ./smart_green_house_client
+      # - run: flutter test
+        # working-directory: ./smart_green_house_client
       # 打包 APK
       - run: flutter build apk --release
         working-directory: ./smart_green_house_client
