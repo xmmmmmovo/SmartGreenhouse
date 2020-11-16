@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from db.rfid_dao import get_rfid_pagination, get_rfid_pagination_by_username
 from db.sensor_dao import count_total, get_sensor_pagination_by_username, get_sensor_pagination, get_sensor_data_hourly
-from model.Pagination import Pagination
+from model.pagination import Pagination
 from response import response_success
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException
@@ -60,10 +60,6 @@ def sensor_get_data():
         total = count_total(
             'WHERE hardware_uuid IN (SELECT hardware_uuid FROM user_hardware WHERE user_id = (SELECT id FROM `user` WHERE username = %s))' + where_sql,
             username, *args)
-    for i in range(len(sensor_list)):
-        sensor_list[i]['temperature'] = str(sensor_list[i]['temperature'])
-        sensor_list[i]['humidity'] = str(sensor_list[i]['humidity'])
-        sensor_list[i]['record_time'] = sensor_list[i]['record_time'].strftime("%m/%d/%Y, %H:%M:%S")
 
     return response_success('success', Pagination(page, size, sensor_list, total['len']))
 

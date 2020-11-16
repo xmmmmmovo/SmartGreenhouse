@@ -1,3 +1,4 @@
+from cache import redis_cache
 from db import MysqlOp
 from .user_dao import select_user_by_username
 from flask_loguru import logger
@@ -30,13 +31,13 @@ def update_threshold_by_uuid(uuid, temperature_limit, humidity_limit):
     return MysqlOp().op_sql('UPDATE hardware SET temperature_limit = %s, humidity_limit = %s WHERE uuid = %s',
                             (temperature_limit, humidity_limit, uuid))
 
-
+@redis_cache("get_hardware_pagination", 25)
 def get_hardware_pagination(page, size, ordered, where_sql, *args):
     logger.info('get_hardware_pagination')
     return MysqlOp().select_all(f"SELECT * FROM hardware {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
                                 (*args, size, (page - 1) * size))
 
-
+@redis_cache("get_hardware_pagination_by_username", 25)
 def get_hardware_pagination_by_username(username, page, size, ordered, where_sql, *args):
     logger.info('get_hardware_pagination_by_username')
     return MysqlOp().select_all(

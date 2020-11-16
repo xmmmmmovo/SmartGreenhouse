@@ -42,4 +42,5 @@ def connect_mqtt():
     return mqtt_client
 
 
-mqtt_client: mqtt.Client = connect_mqtt()
+# mqtt_client: mqtt.Client = connect_mqtt()
+mqtt_client: mqtt.Client = None

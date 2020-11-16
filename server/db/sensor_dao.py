@@ -1,7 +1,8 @@
 from db import MysqlOp
 from flask_loguru import logger
+from cache import redis_cache
 
-
+@redis_cache("get_sensor_pagination", 25)
 def get_sensor_pagination(page, size, ordered, where_sql, *args):
     logger.info('get_sensor_pagination')
     return MysqlOp().select_all(
@@ -10,7 +11,7 @@ def get_sensor_pagination(page, size, ordered, where_sql, *args):
         f" {where_sql} ORDER BY {ordered} ASC LIMIT %s OFFSET %s",
         (*args, size, (page - 1) * size))
 
-
+@redis_cache("get_sensor_pagination_by_username", 25)
 def get_sensor_pagination_by_username(username, page, size, ordered, where_sql, *args):
     logger.info('get_hardware_pagination_by_username')
     return MysqlOp().select_all(
@@ -25,7 +26,7 @@ def get_sensor_pagination_by_username(username, page, size, ordered, where_sql, 
 def count_total(where_sql, *args):
     return MysqlOp().select_one(f'SELECT COUNT(`id`) as len from sensor_data {where_sql}', (*args,))
 
-
+@redis_cache("get_sensor_data_hourly", 60)
 def get_sensor_data_hourly(uuid):
     return MysqlOp().select_all(
         'SELECT temperature, humidity, record_time FROM sensor_data WHERE hardware_uuid = %s AND id > ((SELECT MAX(id) FROM sensor_data) - 100)',

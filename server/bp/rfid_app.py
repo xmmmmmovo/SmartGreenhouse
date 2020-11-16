@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from db.rfid_dao import get_rfid_pagination, get_rfid_pagination_by_username, count_total
-from model.Pagination import Pagination
+from model.pagination import Pagination
 from response import response_success
 from exception.custom_exceptions import DBException, ContentEmptyException, DataNotFoundException, \
     UnAuthorizedException, DataNotSatisfyException, UserNotFoundException, CannotDeleteOnlineHardwareException

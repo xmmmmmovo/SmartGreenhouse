@@ -10,10 +10,9 @@ from exception import exception
 from bp.user_app import user_bp
 from bp.hardware_app import hardware_bp
 from cache import redis
-from mqtt import connect_mqtt
 from config import config
 from utils.pwd_utils import bcrypt
-from utils.jwt_utils import jwt_manager
+from utils.jwt_utils import jwt_manager, JWT_ACCESS_TOKEN_EXPIRES
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -25,7 +24,7 @@ app.register_blueprint(rfid_bp)
 
 app.config['REDIS_URL'] = config['redis']['url']
 app.config['JWT_SECRET_KEY'] = config['app']['jwt_secret_key']
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = JWT_ACCESS_TOKEN_EXPIRES
 
 log = Logger()
 cors = CORS(app, resources={r"/*": {"origins": "*"}})

@@ -1,8 +1,8 @@
 mysql:
   host: db
-  port: mx/58MFuLJ6^%.q
+  port: 3306
   user: root
-  password:
+  password: mx/58MFuLJ6^%.q
   db: greenhouse
   charset: utf8
 

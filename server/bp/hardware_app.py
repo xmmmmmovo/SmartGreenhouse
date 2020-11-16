@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
-from model.Pagination import Pagination
+from model.pagination import Pagination
 from response import response_success
 import uuid
 from db.hardware_dao import insert_hardware, get_id_by_uuid, update_threshold_by_uuid, get_hardware_pagination, \

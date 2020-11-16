@@ -1,17 +1,18 @@
 from flask import Blueprint, request
 
+from cache import set_value
 from db.user_dao import get_user_pagination, count_total, count_total_role, get_role_pagination, get_all_users, \
     get_all_role
 from exception.custom_exceptions import ContentEmptyException, DBException, DataNotFoundException, \
     PasswordErrorException, DataNotSatisfyException, UnAuthorizedException, AdminNameErrorException
-from model.Pagination import Pagination
+from model.pagination import Pagination
 from response import response_success
 from db import user_dao
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_claims
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_claims, get_raw_jwt, get_jti
 from model import user
 from flask_loguru import logger
 
-from utils.jwt_utils import permission_required
+from utils.jwt_utils import permission_required, JWT_ACCESS_TOKEN_EXPIRES
 
 user_bp = Blueprint('user_app', __name__, url_prefix='/user')
 
@@ -59,6 +60,8 @@ def login():
     roles = list(map(lambda x: x['name'], user_dao.select_roles_by_userid(data['id'])))
 
     token = create_access_token(identity=user.User(data['username'], roles))
+    access_jti = get_jti(encoded_token=token)
+    set_value(access_jti, "false", JWT_ACCESS_TOKEN_EXPIRES * 1.2)
 
     return response_success('success', {'token': token})
 
@@ -100,7 +103,8 @@ def change_password():
 @user_bp.route("/logout", methods=['DELETE'])
 @jwt_required
 def logout():
-    # TODO: 为了安全考虑的redis退出登录 但是为了api易于测试暂时不写
+    jti = get_raw_jwt()['jti']
+    set_value(jti, 'true', JWT_ACCESS_TOKEN_EXPIRES * 1.2)
     return response_success('success logout', None)
 
 
