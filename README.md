@@ -79,3 +79,8 @@
 | :---------------: | :---------------: |
 | ![](pics/w13.png) | ![](pics/w14.png) |
 
+## References
+
+[flutter_learn_news](https://github.com/ducafecat/flutter_learn_news/tree/master)
+
+[vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
