@@ -23,7 +23,7 @@
 
 ### 架构图
 
-![image-20201027212644787](https://cdn.jsdelivr.net/gh/xmmmmmovo/ResourcesBackup/blog/pics/20201027212645.png)
+![](https://cdn.jsdelivr.net/gh/xmmmmmovo/ResourcesBackup/blog/flows.png)
 
 ### 硬件端
 
